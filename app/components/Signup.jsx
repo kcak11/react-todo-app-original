@@ -12,7 +12,7 @@ export var Signup =  React.createClass({
       dispatch(actions.createUser(this.refs.email.value, this.refs.password.value));
   },
   render: function () {
-    var {hasError, errorMessage} = this.props;
+    var {errorMessage} = this.props;
     var renderErrorMessage = () => {
       if (errorMessage) {
         return (
@@ -26,7 +26,7 @@ export var Signup =  React.createClass({
     return (
       <div>
         <h1>Signup</h1>
-        
+
         <form onSubmit={this.handleSubmit}>
           {renderErrorMessage()}
           <input type="text" name="email" ref="email" placeholder="Email"/>

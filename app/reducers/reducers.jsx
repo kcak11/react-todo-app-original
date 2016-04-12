@@ -56,18 +56,16 @@ export var todosReducer = (state = [], action) => {
   }
 };
 
-export var signupReducer = (state = {hasError: false}, action) => {
+export var signupReducer = (state = {errorMessage: undefined}, action) => {
   switch (action.type) {
     case 'SIGNUP_SUCCESS':
       return {
         ...state,
-        hasError: false,
         errorMessage: undefined
       }
     case 'SIGNUP_ERROR':
       return {
         ...state,
-        hasError: true,
         errorMessage: action.errorMessage
       }
     default:

@@ -12,7 +12,7 @@ export var Login = React.createClass({
       dispatch(actions.loginUser(this.refs.email.value, this.refs.password.value));
   },
   render: function() {
-    var {hasError, errorMessage} = this.props;
+    var {errorMessage} = this.props;
     var renderErrorMessage = () => {
       if (errorMessage) {
         return (

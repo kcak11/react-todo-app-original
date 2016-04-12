@@ -87,10 +87,14 @@ export var loginReducer = (state = {errorMessage: undefined, token: undefined, u
     case 'LOGIN_ERROR':
       return {
         ...state,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage
+      };
+    case 'LOGOUT':
+      return {
+        ...state,
         token: undefined,
         uid: undefined
-      };
+      }
     default:
       return state;
   }

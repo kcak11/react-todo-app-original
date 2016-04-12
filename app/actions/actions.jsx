@@ -81,3 +81,12 @@ export var loginUser = (email = '', password = '') => {
     });
   }
 };
+
+export var logoutUser = () => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: 'LOGOUT'
+    });
+    window.location.hash = ''
+  }
+};

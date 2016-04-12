@@ -55,3 +55,43 @@ export var todosReducer = (state = [], action) => {
       return state;
   }
 };
+
+export var signupReducer = (state = {hasError: false}, action) => {
+  switch (action.type) {
+    case 'SIGNUP_SUCCESS':
+      return {
+        ...state,
+        hasError: false,
+        errorMessage: undefined
+      }
+    case 'SIGNUP_ERROR':
+      return {
+        ...state,
+        hasError: true,
+        errorMessage: action.errorMessage
+      }
+    default:
+      return state;
+  }
+};
+
+export var loginReducer = (state = {errorMessage: undefined, token: undefined, uid: undefined}, action) => {
+  switch (action.type) {
+    case 'LOGIN_SUCCESS':
+      return {
+        ...state,
+        errorMessage: undefined,
+        token: action.token,
+        uid: action.uid
+      }
+    case 'LOGIN_ERROR':
+      return {
+        ...state,
+        errorMessage: action.errorMessage,
+        token: undefined,
+        uid: undefined
+      };
+    default:
+      return state;
+  }
+};

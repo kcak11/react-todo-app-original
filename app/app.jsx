@@ -7,6 +7,8 @@ var TodoApp = require('TodoApp');
 var actions = require('actions');
 var store = require('configureStore').configure();
 var TodoAPI = require('TodoAPI');
+import Signup from 'Signup';
+import Login from 'Login';
 
 store.subscribe(() => {
   var state = store.getState();
@@ -14,6 +16,7 @@ store.subscribe(() => {
   TodoAPI.setTodos(state.todos);
 });
 
+// TODO - Create a priming action in app.jsx that also populates the login token
 var initialTodos = TodoAPI.getTodos();
 store.dispatch(actions.addTodos(initialTodos));
 
@@ -25,7 +28,13 @@ require('style!css!sass!applicationStyles')
 
 ReactDOM.render(
   <Provider store={store}>
-    <TodoApp/>
+    <Router history={hashHistory}>
+      <Route path="/">
+        <Route path="todos" component={TodoApp}/>
+        <Route path="login" component={Login}/>
+        <IndexRoute component={Signup}/>
+      </Route>
+    </Router>
   </Provider>,
   document.getElementById('app')
 );

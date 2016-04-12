@@ -35,26 +35,14 @@ export var toggleTodo = (id) => {
 };
 
 export var createUser = (email = '', password = '') => {
-  return (dispatch, getState) => {
-    firebaseRef.createUser({
-      email,
-      password
-    }, function(error, userData) {
-      if (!error) {
-        // success
-        dispatch({
-          type: 'SIGNUP_SUCCESS'
-        });
-        window.location.hash = 'login'
-      } else {
-        // error
-        dispatch({
-          type: 'SIGNUP_ERROR',
-          errorMessage: error.message
-        });
-      }
-    });
-  }
+  return firebaseRef.createUser({
+    email,
+    password
+  }).then((userData) => {
+    return;
+  }, (error) => {
+    throw new Error(error.message);
+  });
 };
 
 export var loginUser = (email = '', password = '') => {

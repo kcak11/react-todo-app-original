@@ -1,5 +1,5 @@
 var redux = require('redux');
-var {searchTextReducer, showCompletedReducer, todosReducer, signupReducer, loginReducer} = require('reducers');
+var {searchTextReducer, showCompletedReducer, todosReducer, loginReducer} = require('reducers');
 import thunk from 'redux-thunk';
 
 export var configure = (initialState = {}) => {
@@ -7,7 +7,6 @@ export var configure = (initialState = {}) => {
     searchText: searchTextReducer,
     showCompleted: showCompletedReducer,
     todos: todosReducer,
-    signup: signupReducer,
     login: loginReducer
   });
 

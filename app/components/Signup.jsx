@@ -3,32 +3,39 @@ var {connect} = require('react-redux');
 import * as actions from 'actions'
 
 export var Signup =  React.createClass({
+  getInitialState: function () {
+    return {
+      errorMessage: undefined
+    };
+  },
   handleSubmit: function (e) {
       var {dispatch} = this.props;
-
       e.preventDefault();
 
-      console.log('Handle submit!');
-      dispatch(actions.createUser(this.refs.email.value, this.refs.password.value));
+      actions.createUser(this.refs.email.value, this.refs.password.value).then(() => {
+        // TODO - redirect
+      }, (e) => {
+        this.setState({
+          errorMessage: e.message
+        });
+      });
+  },
+  renderErrorMessage: function (errorMessage) {
+    if (errorMessage) {
+      return (
+        <p>{errorMessage}</p>
+      );
+    }
   },
   render: function () {
-    var {errorMessage} = this.props;
-    var renderErrorMessage = () => {
-      if (errorMessage) {
-        return (
-          <p>{errorMessage}</p>
-        );
-      } else {
-        return;
-      }
-    };
+    var {errorMessage} = this.state;
 
     return (
       <div>
         <h1>Signup</h1>
 
         <form onSubmit={this.handleSubmit}>
-          {renderErrorMessage()}
+          {this.renderErrorMessage(errorMessage)}
           <input type="text" name="email" ref="email" placeholder="Email"/>
           <input type="password" name="password" ref="password" placeholder="Password"/>
           <button>Create Account</button>
@@ -42,8 +49,6 @@ export var Signup =  React.createClass({
 
 export default connect(
   (state) => {
-    return {
-      ...state.signup
-    }
+    return {};
   }
 )(Signup);

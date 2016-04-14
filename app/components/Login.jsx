@@ -1,5 +1,6 @@
 var React = require('react');
 var {connect} = require('react-redux');
+var {hashHistory} = require('react-router');
 import * as actions from 'actions';
 
 export var Login = React.createClass({
@@ -8,8 +9,12 @@ export var Login = React.createClass({
 
       e.preventDefault();
 
-      console.log('Handle login!');
-      dispatch(actions.loginUser(this.refs.email.value, this.refs.password.value));
+      dispatch(actions.loginUser(this.refs.email.value, this.refs.password.value)).then(() => {
+        console.log('login success');
+        hashHistory.push('/todos');
+      }, () => {
+        console.log('login error');
+      })
   },
   render: function() {
     var {errorMessage} = this.props;

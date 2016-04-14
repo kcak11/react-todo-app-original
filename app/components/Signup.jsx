@@ -1,5 +1,6 @@
 var React = require('react');
 var {connect} = require('react-redux');
+var {hashHistory} = require('react-router');
 import * as actions from 'actions'
 
 export var Signup =  React.createClass({
@@ -13,7 +14,7 @@ export var Signup =  React.createClass({
       e.preventDefault();
 
       actions.createUser(this.refs.email.value, this.refs.password.value).then(() => {
-        // TODO - redirect
+        hashHistory.push('/login');
       }, (e) => {
         this.setState({
           errorMessage: e.message

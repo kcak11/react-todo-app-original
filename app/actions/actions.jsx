@@ -47,25 +47,17 @@ export var createUser = (email = '', password = '') => {
 
 export var loginUser = (email = '', password = '') => {
   return (dispatch, getState) => {
-    firebaseRef.authWithPassword({
+    return firebaseRef.authWithPassword({
       email,
       password
-    }, function(error, authData) {
-      if (!error) {
-        // success
-        dispatch({
-          type: 'LOGIN_SUCCESS',
-          token: authData.token,
-          uid: authData.uid
-        });
-        window.location.hash = 'todos'
-      } else {
-        // error
-        dispatch({
-          type: 'LOGIN_ERROR',
-          errorMessage: error.message
-        });
-      }
+    }).then((authData) => {
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        token: authData.token,
+        uid: authData.uid
+      });
+    }, (error) => {
+      throw new Error(error.message);
     });
   }
 };
@@ -75,6 +67,5 @@ export var logoutUser = () => {
     dispatch({
       type: 'LOGOUT'
     });
-    window.location.hash = ''
   }
 };

@@ -56,20 +56,14 @@ export var todosReducer = (state = [], action) => {
   }
 };
 
-export var loginReducer = (state = {errorMessage: undefined, token: undefined, uid: undefined}, action) => {
+export var loginReducer = (state = {token: undefined, uid: undefined}, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
       return {
         ...state,
-        errorMessage: undefined,
         token: action.token,
         uid: action.uid
       }
-    case 'LOGIN_ERROR':
-      return {
-        ...state,
-        errorMessage: action.errorMessage
-      };
     case 'LOGOUT':
       return {
         ...state,

@@ -11,6 +11,7 @@ export var Login = React.createClass({
 
       dispatch(actions.loginUser(this.refs.email.value, this.refs.password.value)).then(() => {
         console.log('login success');
+        hashHistory.push('/todos');
       }, (e) => {
         console.log('login error', e);
       })

@@ -111,9 +111,13 @@ export var loginUser = (email = '', password = '') => {
 
 export var logoutUser = () => {
   return (dispatch, getState) => {
-    firebaseRef.unauth();
-    dispatch({
-      type: 'LOGOUT'
+    return firebaseRef.unauth().then(function () {
+      dispatch({
+        type: 'LOGOUT'
+      });
+      return;
+    }, (error) => {
+      throw new Error(error.message);
     });
   }
 };

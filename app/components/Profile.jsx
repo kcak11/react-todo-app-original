@@ -9,7 +9,9 @@ export var Profile = React.createClass({
 
     return (
       <button onClick={() => {
-        dispatch(actions.logoutUser());
+        dispatch(actions.logoutUser()).then(() => {
+          hashHistory.push('/login');
+        })
       }}>Logout</button>
     );
   }

@@ -11,21 +11,6 @@ var TodoAPI = require('TodoAPI');
 import Signup from 'Signup';
 import Login from 'Login';
 
-// store.subscribe(() => {
-//   var state = store.getState();
-// });
-
-// TODO - ON ROUTE CHANGES, THIS DOESN'T FIX ISSUE. YOU CAN STILL SWITCH TO TODOS WITHOUT GETTING REDIRECTED
-// Can i make specific components private & others public?
-firebaseRef.onAuth((authData) => {
-  if (authData) {
-    console.log('logged in');
-    hashHistory.push('/todos');
-  } else if (window.location.hash.indexOf('#/todos') === 0) {
-    hashHistory.push('/login');
-  }
-});
-
 // Check if there is already an id ready to go
 if (store.getState().login.uid) {
   store.dispatch(actions.populateTodos());
@@ -37,15 +22,42 @@ $(document).foundation();
 // App css
 require('style!css!sass!applicationStyles');
 
+
+const routes = {
+  path: '/',
+  indexRoute: {
+    getComponents (nextState, callback) {
+      if (store.getState().login.token) {
+        return hashHistory.push('/todos');
+      }
+
+      callback(null, Signup);
+    }
+  },
+  childRoutes: [{
+    path: 'todos',
+    getComponents (nextState, callback) {
+      if (!store.getState().login.token) {
+        return hashHistory.push('/login');
+      }
+
+      callback(null, TodoApp);
+    }
+  }, {
+    path: 'login',
+    getComponents (nextState, callback) {
+      if (store.getState().login.token) {
+        return hashHistory.push('/todos');
+      }
+
+      callback(null, Login);
+    }
+  }]
+};
+
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={hashHistory}>
-      <Route path="/">
-        <Route path="todos" component={TodoApp}/>
-        <Route path="login" component={Login}/>
-        <IndexRoute component={Signup}/>
-      </Route>
-    </Router>
+    <Router history={hashHistory} routes={routes}/>
   </Provider>,
   document.getElementById('app')
 );

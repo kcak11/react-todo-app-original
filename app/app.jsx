@@ -16,9 +16,7 @@ store.subscribe(() => {
   TodoAPI.setTodos(state.todos);
 });
 
-// TODO - Create a priming action in app.jsx that also populates the login token
-var initialTodos = TodoAPI.getTodos();
-store.dispatch(actions.addTodos(initialTodos));
+store.dispatch(actions.populateTodos());
 
 // Load foundation
 $(document).foundation();

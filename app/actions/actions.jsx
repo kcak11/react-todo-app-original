@@ -1,4 +1,5 @@
-import firebaseRef from 'firebaseRef';
+import firebaseRef, {getUserRef} from 'firebaseRef';
+import moment from 'moment';
 
 export var setSearchText = (searchText) => {
   return {
@@ -14,23 +15,68 @@ export var toggleShowCompleted = () => {
 };
 
 export var addTodo = (text) => {
-  return {
-    type: 'ADD_TODO',
-    text
-  };
+  return (dispatch, getState) => {
+    var uid = getState().login.uid;
+    var todosRef = getUserRef(uid).child('todos');
+    var todo = {
+      text,
+      completed: false,
+      createdAt: moment().unix(),
+      completedAt: null
+    };
+
+    var todoRef = todosRef.push(todo, (err) => {
+      dispatch({
+        type: 'ADD_TODO',
+        todo: {
+          ...todo,
+          id: todoRef.key()
+        }
+      });
+    });
+  }
 };
 
-export var addTodos = (todos) => {
-  return {
-    type: 'ADD_TODOS',
-    todos
-  };
+export var populateTodos = (todos) => {
+  return (dispatch, getState) => {
+    var uid = getState().login.uid;
+    var todosRef = getUserRef(uid).child('todos');
+
+    todosRef.on('child_added', (snapshot) => {
+      dispatch({
+        type: 'ADD_TODO',
+        todo: {
+          ...snapshot.val(),
+          id: snapshot.key()
+        }
+      });
+    }, (error) => {
+      // console.log('Error', error);
+    });
+  }
 };
 
 export var toggleTodo = (id) => {
-  return {
-    type: 'TOGGLE_TODO',
-    id
+  return (dispatch, getState) => {
+    var uid = getState().login.uid;
+    var todoRef = getUserRef(uid).child(`todos/${id}`);
+    var updates;
+
+    todoRef.once('value').then((snapshot) => {
+      var newCompleted = !snapshot.val().completed;
+      updates = {
+        completed: newCompleted,
+        completedAt: newCompleted ? moment().unix() : null
+      };
+
+      return todoRef.update(updates)
+    }).then(() => {
+      dispatch({
+        type: 'UPDATE_TODO',
+        id,
+        updates
+      });
+    });
   };
 };
 

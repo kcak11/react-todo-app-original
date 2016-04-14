@@ -1,2 +1,8 @@
 var Firebase = require('firebase');
-export default new Firebase('https://mead-firebase-exampl.firebaseio.com/');
+var firebaseRef = new Firebase('https://mead-firebase-exampl.firebaseio.com/');
+
+export var getUserRef = (uid) => {
+    return firebaseRef.child(`users/${uid}`);
+}
+
+export default firebaseRef;

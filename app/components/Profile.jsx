@@ -1,5 +1,6 @@
 var React = require('react');
 var {connect} = require('react-redux');
+var {hashHistory} = require('react-router');
 import * as actions from 'actions';
 
 export var Profile = React.createClass({

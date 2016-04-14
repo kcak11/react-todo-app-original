@@ -102,6 +102,7 @@ export var loginUser = (email = '', password = '') => {
         token: authData.token,
         uid: authData.uid
       });
+      dispatch(populateTodos());
     }, (error) => {
       throw new Error(error.message);
     });
@@ -110,6 +111,7 @@ export var loginUser = (email = '', password = '') => {
 
 export var logoutUser = () => {
   return (dispatch, getState) => {
+    firebaseRef.unauth();
     dispatch({
       type: 'LOGOUT'
     });

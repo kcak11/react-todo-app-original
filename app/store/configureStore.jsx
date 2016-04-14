@@ -27,26 +27,18 @@ export var configure = (initialState = {}) => {
   }
 
 
-  // const localStorageMiddleware = ({getState}) => {
-  //   return (next) => (action) => {
-  //     const prevState = getState();
-  //     const returnValue = next(action);
-  //     const nextState = getState();
-  //     debugger;
-      // localStorage.setItem('login', JSON.stringify(
-      //   getState().login
-      // ));
-  //     return returnValue;
-  //   };
-  // };
-
   try {
-    var loginObj = JSON.parse(localStorage.getItem('login'));
-    // debugger;
-    initialState.login = loginObj
+    let rawLogin = localStorage.getItem('login');
+
+    if (rawLogin) {
+      initialState.login = JSON.parse(rawLogin);
+    } else {
+      throw new Error();
+    }
   } catch (e) {
-    initialState.login = undefined;
+    initialState.login = {};
   }
+
 
   var store = redux.createStore(reducer, initialState, redux.compose(
     redux.applyMiddleware(logger),

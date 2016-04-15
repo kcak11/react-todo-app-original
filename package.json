@@ -10,6 +10,7 @@
   "author": "Andrew Mead",
   "license": "MIT",
   "dependencies": {
+    "animate.css": "^3.5.1",
     "axios": "^0.9.1",
     "express": "^4.13.4",
     "firebase": "^2.4.2",

@@ -8,7 +8,11 @@ var notyDefaults = {
   timeout: 4000,
   killer: true,
   theme: 'relax',
-  layout: 'topCenter'
+  layout: 'topCenter',
+  animation: {
+    open: 'animated fadeIn',
+    close: 'animated fadeOut'
+  }
 };
 
 var FlashMessage = React.createClass({

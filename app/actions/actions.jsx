@@ -111,7 +111,9 @@ export var loginUser = (email = '', password = '') => {
 
 export var logoutUser = () => {
   return (dispatch, getState) => {
+    console.log('Calling unauth')
     return firebaseRef.unauth().then(function () {
+      console.log('unauth complete')
       dispatch({
         type: 'LOGOUT'
       });

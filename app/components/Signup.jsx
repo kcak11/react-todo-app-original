@@ -24,7 +24,7 @@ export var Signup =  React.createClass({
   renderErrorMessage: function (errorMessage) {
     if (errorMessage) {
       return (
-        <p>{errorMessage}</p>
+        <p className="text-center">{errorMessage}</p>
       );
     }
   },
@@ -32,17 +32,21 @@ export var Signup =  React.createClass({
     var {errorMessage} = this.state;
 
     return (
-      <div>
-        <h1>Signup</h1>
+      <div className="auth-page">
+        <div className="auth-page__form">
+          <h1 className="text-center">Signup</h1>
 
-        <form onSubmit={this.handleSubmit}>
-          {this.renderErrorMessage(errorMessage)}
-          <input type="text" name="email" ref="email" placeholder="Email"/>
-          <input type="password" name="password" ref="password" placeholder="Password"/>
-          <button>Create Account</button>
-        </form>
+          <form onSubmit={this.handleSubmit}>
+            {this.renderErrorMessage(errorMessage)}
+            <input type="text" name="email" ref="email" placeholder="Email"/>
+            <input type="password" name="password" ref="password" placeholder="Password"/>
+            <button className="button expanded">Create Account</button>
+          </form>
 
-        <a href="#/login">Already have an account? Login</a>
+          <p className="text-center">
+            <a href="#/login">Already have an account? Login</a>
+          </p>
+      </div>
       </div>
     )
   }

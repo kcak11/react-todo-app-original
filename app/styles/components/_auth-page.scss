@@ -1,0 +1,20 @@
+.auth-page {
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  margin: 0;
+  width: 100vw;
+}
+
+.auth-page__form {
+  background-color: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  padding: 2rem;
+  width: 300px;
+
+  h1 {
+    margin-bottom: 2rem;;
+  }
+}

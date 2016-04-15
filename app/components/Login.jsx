@@ -4,6 +4,11 @@ var {hashHistory} = require('react-router');
 import * as actions from 'actions';
 
 export var Login = React.createClass({
+  getInitialState: function () {
+    return {
+      errorMessage: undefined
+    };
+  },
   handleSubmit: function (e) {
       var {dispatch} = this.props;
 
@@ -13,32 +18,38 @@ export var Login = React.createClass({
         console.log('login success');
         hashHistory.push('/todos');
       }, (e) => {
-        console.log('login error', e);
+        this.setState({
+          errorMessage: e.message
+        });
       })
   },
   render: function() {
-    var {errorMessage} = this.props;
+    var {errorMessage} = this.state;
     var renderErrorMessage = () => {
       if (errorMessage) {
         return (
-          <p>{errorMessage}</p>
+          <p className="text-center">{errorMessage}</p>
         );
       } else {
         return;
       }
     };
     return (
-      <div>
-        <h1>Login</h1>
+      <div className="auth-page">
+        <div className="auth-page__form">
+          <h1 className="text-center">Login</h1>
 
-        <form onSubmit={this.handleSubmit}>
-          {renderErrorMessage()}
-          <input type="text" name="email" ref="email" placeholder="Email"/>
-          <input type="password" name="password" ref="password" placeholder="Password"/>
-          <button>Login</button>
-        </form>
+          <form onSubmit={this.handleSubmit}>
+            {renderErrorMessage()}
+            <input type="text" name="email" ref="email" placeholder="Email"/>
+            <input type="password" name="password" ref="password" placeholder="Password"/>
+            <button className="button expanded">Login</button>
+          </form>
 
-        <a href="#/">Need an account? Signup</a>
+          <p className="text-center">
+            <a href="#/">Need an account? Signup</a>
+          </p>
+        </div>
       </div>
     );
   }

@@ -6,6 +6,7 @@
 @include foundation-everything;
 
 // Components
+@import "components/auth-page";
 @import "components/container";
 @import "components/page-title";
 @import "components/todo";

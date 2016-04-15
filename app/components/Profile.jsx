@@ -4,15 +4,28 @@ var {hashHistory} = require('react-router');
 import * as actions from 'actions';
 
 export var Profile = React.createClass({
+  componentDidMount: function () {
+    var elem = new Foundation.DropdownMenu($('.dropdown.menu'), {});
+  },
   render: function() {
     var {dispatch} = this.props;
 
     return (
-      <button onClick={() => {
-        dispatch(actions.logoutUser()).then(() => {
-          hashHistory.push('/login');
-        })
-      }}>Logout</button>
+      <div className="actions">
+        <ul className="dropdown menu" data-dropdown-menu>
+          <li>
+            <a href="#" onClick={e => e.preventDefault()}>Account</a>
+            <ul className="menu">
+              <li><a href="#" onClick={(e) => {
+                e.preventDefault();
+                dispatch(actions.logoutUser()).then(() => {
+                  hashHistory.push('/login');
+                });
+              }}>Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     );
   }
 });

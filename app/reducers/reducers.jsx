@@ -5,6 +5,8 @@ export var searchTextReducer = (state = '', action) => {
   switch (action.type) {
     case 'SET_SEARCH_TEXT':
       return action.searchText;
+    case 'LOGOUT':
+      return '';
     default:
       return state;
   };
@@ -14,6 +16,20 @@ export var showCompletedReducer = (state = false, action) => {
   switch (action.type) {
     case 'TOGGLE_SHOW_COMPLETED':
       return !state;
+    case 'LOGOUT':
+      return '';
+    default:
+      return state;
+  }
+};
+
+export var flashMessageReducer = (state = {message: null, messageType: 'alert'}, action) => {
+  switch (action.type) {
+    case 'SHOW_FLASH_MESSAGE':
+      return {
+        message: action.message,
+        messageType: action.messageType
+      };
     default:
       return state;
   }

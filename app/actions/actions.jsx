@@ -136,3 +136,11 @@ export var changePassword = (opts = {}) => {
     return firebaseRef.changePassword(opts);
   }
 };
+
+export var showFlashMessage = (message, messageType = 'alert') => {
+  return {
+    type: 'SHOW_FLASH_MESSAGE',
+    message,
+    messageType
+  }
+};

@@ -12,6 +12,7 @@ import Signup from 'Signup';
 import Login from 'Login';
 import RequestReset from 'RequestReset';
 import SetPassword from 'SetPassword';
+import App from 'App';
 
 // Check if there is already an id ready to go
 if (store.getState().login.uid) {
@@ -43,7 +44,7 @@ var redirectIfLoggedIn = (nextState, replace, next) => {
 ReactDOM.render(
   <Provider store={store}>
     <Router history={hashHistory}>
-      <Route path="/">
+      <Route path="/" component={App}>
         <Route path="todos" component={TodoApp} onEnter={requireLogin}/>
         <Route path="login" component={Login} onEnter={redirectIfLoggedIn}/>
         <Route path="request-reset" component={RequestReset}/>

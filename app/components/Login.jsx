@@ -4,11 +4,6 @@ var {hashHistory} = require('react-router');
 import * as actions from 'actions';
 
 export var Login = React.createClass({
-  getInitialState: function () {
-    return {
-      errorMessage: undefined
-    };
-  },
   handleSubmit: function (e) {
       var {dispatch} = this.props;
 
@@ -18,40 +13,27 @@ export var Login = React.createClass({
         console.log('login success. is temp:', isTemporaryPassword);
         if (isTemporaryPassword) {
           hashHistory.push('/set-password');
+          dispatch(actions.showFlashMessage('Please set a new password', 'success'));
         } else {
           hashHistory.push('/todos');
         }
-
       }, (e) => {
-        this.setState({
-          errorMessage: e.message
-        });
+        dispatch(actions.showFlashMessage(e.message, 'error'));
       })
   },
   render: function() {
-    var {errorMessage} = this.state;
-    var renderErrorMessage = () => {
-      if (errorMessage) {
-        return (
-          <p className="text-center">{errorMessage}</p>
-        );
-      } else {
-        return;
-      }
-    };
     return (
       <div className="auth-page">
-        <div className="auth-page__form">
+        <div className="auth-page__box">
           <h3 className="text-center">Login</h3>
 
           <form onSubmit={this.handleSubmit}>
-            {renderErrorMessage()}
             <input type="text" name="email" ref="email" placeholder="Email"/>
             <input type="password" name="password" ref="password" placeholder="Password"/>
             <button className="button expanded">Login</button>
           </form>
 
-          <p className="text-center">
+          <p className="auth-page__actions">
             <a href="#/">Signup</a>
             <a href="#/request-reset">Reset</a>
           </p>

@@ -1,5 +1,5 @@
 var redux = require('redux');
-var {searchTextReducer, showCompletedReducer, todosReducer, loginReducer} = require('reducers');
+var {searchTextReducer, showCompletedReducer, todosReducer, loginReducer, flashMessageReducer} = require('reducers');
 import thunk from 'redux-thunk';
 
 export var configure = (initialState = {}) => {
@@ -7,7 +7,8 @@ export var configure = (initialState = {}) => {
     searchText: searchTextReducer,
     showCompleted: showCompletedReducer,
     todos: todosReducer,
-    login: loginReducer
+    login: loginReducer,
+    flashMessage: flashMessageReducer
   });
 
   const logger = store => next => action => {

@@ -103,6 +103,7 @@ export var loginUser = (email = '', password = '') => {
         uid: authData.uid
       });
       dispatch(populateTodos());
+      return authData.password.isTemporaryPassword;
     }, (error) => {
       throw new Error(error.message);
     });
@@ -121,5 +122,17 @@ export var logoutUser = () => {
     }, (error) => {
       throw new Error(error.message);
     });
+  }
+};
+
+export var requestReset = (email = '') => {
+  return (dispatch, getState) => {
+    return firebaseRef.resetPassword({email});
+  }
+};
+
+export var changePassword = (opts = {}) => {
+  return (dispatch, getState) => {
+    return firebaseRef.changePassword(opts);
   }
 };

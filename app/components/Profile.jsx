@@ -16,12 +16,22 @@ export var Profile = React.createClass({
           <li>
             <a href="#" onClick={e => e.preventDefault()}>Account</a>
             <ul className="menu">
-              <li><a href="#" onClick={(e) => {
-                e.preventDefault();
-                dispatch(actions.logoutUser()).then(() => {
-                  hashHistory.push('/login');
-                });
-              }}>Logout</a></li>
+              <li>
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  hashHistory.push('/set-password');
+                }}>
+                  Update Password
+                </a>
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(actions.logoutUser()).then(() => {
+                    hashHistory.push('/login');
+                  });
+                }}>
+                  Logout
+                </a>
+              </li>
             </ul>
           </li>
         </ul>

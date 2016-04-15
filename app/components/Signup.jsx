@@ -34,7 +34,7 @@ export var Signup =  React.createClass({
     return (
       <div className="auth-page">
         <div className="auth-page__form">
-          <h1 className="text-center">Signup</h1>
+          <h3 className="text-center">Signup</h3>
 
           <form onSubmit={this.handleSubmit}>
             {this.renderErrorMessage(errorMessage)}
@@ -44,7 +44,8 @@ export var Signup =  React.createClass({
           </form>
 
           <p className="text-center">
-            <a href="#/login">Already have an account? Login</a>
+            <a href="#/login">Login</a>
+            <a href="#/request-reset">Reset</a>
           </p>
       </div>
       </div>

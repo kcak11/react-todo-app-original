@@ -14,9 +14,14 @@ export var Login = React.createClass({
 
       e.preventDefault();
 
-      dispatch(actions.loginUser(this.refs.email.value, this.refs.password.value)).then(() => {
-        console.log('login success');
-        hashHistory.push('/todos');
+      dispatch(actions.loginUser(this.refs.email.value, this.refs.password.value)).then((isTemporaryPassword) => {
+        console.log('login success. is temp:', isTemporaryPassword);
+        if (isTemporaryPassword) {
+          hashHistory.push('/set-password');
+        } else {
+          hashHistory.push('/todos');
+        }
+
       }, (e) => {
         this.setState({
           errorMessage: e.message
@@ -37,7 +42,7 @@ export var Login = React.createClass({
     return (
       <div className="auth-page">
         <div className="auth-page__form">
-          <h1 className="text-center">Login</h1>
+          <h3 className="text-center">Login</h3>
 
           <form onSubmit={this.handleSubmit}>
             {renderErrorMessage()}
@@ -47,7 +52,8 @@ export var Login = React.createClass({
           </form>
 
           <p className="text-center">
-            <a href="#/">Need an account? Signup</a>
+            <a href="#/">Signup</a>
+            <a href="#/request-reset">Reset</a>
           </p>
         </div>
       </div>

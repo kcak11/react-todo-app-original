@@ -10,6 +10,8 @@ var store = require('configureStore').configure();
 var TodoAPI = require('TodoAPI');
 import Signup from 'Signup';
 import Login from 'Login';
+import RequestReset from 'RequestReset';
+import SetPassword from 'SetPassword';
 
 // Check if there is already an id ready to go
 if (store.getState().login.uid) {
@@ -44,6 +46,8 @@ ReactDOM.render(
       <Route path="/">
         <Route path="todos" component={TodoApp} onEnter={requireLogin}/>
         <Route path="login" component={Login} onEnter={redirectIfLoggedIn}/>
+        <Route path="request-reset" component={RequestReset}/>
+        <Route path="set-password" component={SetPassword}/>
         <IndexRoute component={Signup} onEnter={redirectIfLoggedIn}/>
       </Route>
     </Router>

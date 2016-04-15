@@ -1,5 +1,6 @@
 var React = require('react');
 var {connect} = require('react-redux');
+import * as actions from 'actions'
 import noty from 'noty';
 
 var notyDefaults = {
@@ -17,12 +18,15 @@ var notyDefaults = {
 
 var FlashMessage = React.createClass({
   showFlashMessage: function () {
+    var {dispatch} = this.props;
+
     if (this.props.flashMessage.message) {
       noty({
         ...notyDefaults,
         text: this.props.flashMessage.message,
         type: this.props.flashMessage.messageType
       });
+      dispatch(actions.clearFlashMessage());
     }
   },
   componentDidMount: function () {

@@ -26,7 +26,7 @@ describe('Actions', () => {
       type: 'ADD_TODO',
       text: 'Thing to do'
     };
-    var res = actions.addTodo(action.text);
+    var res = actions.createTodo(action.text);
 
     expect(res).toEqual(action);
   });

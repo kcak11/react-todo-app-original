@@ -25,7 +25,7 @@ export var Profile = React.createClass({
                 </a>
                 <a href="#" onClick={(e) => {
                   e.preventDefault();
-                  dispatch(actions.logoutUser()).then(() => {
+                  dispatch(actions.startLogout()).then(() => {
                     hashHistory.push('/login');
                   });
                 }}>

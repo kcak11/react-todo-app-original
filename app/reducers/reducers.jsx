@@ -30,6 +30,11 @@ export var flashMessageReducer = (state = {message: null, messageType: 'alert'},
         message: action.message,
         messageType: action.messageType
       };
+    case 'CLEAR_FLASH_MESSAGE':
+      return {
+        message: null,
+        messageType: 'alert'
+      };
     default:
       return state;
   }
@@ -69,7 +74,7 @@ export var todosReducer = (state = [], action) => {
 
 export var loginReducer = (state = {token: undefined, uid: undefined}, action) => {
   switch (action.type) {
-    case 'LOGIN_SUCCESS':
+    case 'LOGIN':
       return {
         ...state,
         token: action.token,

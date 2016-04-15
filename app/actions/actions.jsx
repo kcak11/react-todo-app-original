@@ -1,4 +1,5 @@
 import firebaseRef, {getUserRef} from 'firebaseRef';
+import {hashHistory} from 'react-router'
 import moment from 'moment';
 
 export var setSearchText = (searchText) => {
@@ -14,7 +15,22 @@ export var toggleShowCompleted = () => {
   };
 };
 
-export var addTodo = (text) => {
+export var addTodo = (todo) => {
+  return {
+    type: 'ADD_TODO',
+    todo
+  };
+};
+
+export var updateTodo = (id, updates) => {
+  return {
+    type: 'UPDATE_TODO',
+    id,
+    updates
+  };
+};
+
+export var createTodo = (text) => {
   return (dispatch, getState) => {
     var uid = getState().login.uid;
     var todosRef = getUserRef(uid).child('todos');
@@ -26,13 +42,10 @@ export var addTodo = (text) => {
     };
 
     var todoRef = todosRef.push(todo, (err) => {
-      dispatch({
-        type: 'ADD_TODO',
-        todo: {
-          ...todo,
-          id: todoRef.key()
-        }
-      });
+      dispatch(addTodo({
+        ...todo,
+        id: todoRef.key()
+      }));
     });
   }
 };
@@ -42,16 +55,14 @@ export var populateTodos = (todos) => {
     var uid = getState().login.uid;
     var todosRef = getUserRef(uid).child('todos');
 
-    todosRef.on('child_added', (snapshot) => {
-      dispatch({
-        type: 'ADD_TODO',
-        todo: {
-          ...snapshot.val(),
-          id: snapshot.key()
-        }
+    todosRef.once('value', (snapshot) => {
+      var val = snapshot.val();
+      var todos = Object.keys(val).map((key) => {
+        dispatch(addTodo({
+          ...val[key],
+          id: key
+        }));
       });
-    }, (error) => {
-      // console.log('Error', error);
     });
   }
 };
@@ -71,53 +82,62 @@ export var toggleTodo = (id) => {
 
       return todoRef.update(updates)
     }).then(() => {
-      dispatch({
-        type: 'UPDATE_TODO',
-        id,
-        updates
-      });
+      dispatch(updateTodo(id, updates));
     });
   };
 };
 
 export var createUser = (email = '', password = '') => {
-  return firebaseRef.createUser({
-    email,
-    password
-  }).then((userData) => {
-    return;
-  }, (error) => {
-    throw new Error(error.message);
-  });
+  return (dispatch, getState) => {
+    return firebaseRef.createUser({
+      email,
+      password
+    }).then(() => {
+      dispatch(showFlashMessage('Account created!', 'success'));
+      hashHistory.push('/login');
+      return;
+    }, (e) => {
+      dispatch(showFlashMessage(e.message, 'error'));
+      throw new Error(e.message);
+    });
+  };
 };
 
-export var loginUser = (email = '', password = '') => {
+export var login = (token, uid) => {
+  return {
+    type: 'LOGIN',
+    token,
+    uid
+  };
+};
+
+export var logout = () => {
+  return {
+    type: 'LOGOUT'
+  };
+};
+
+export var startLogin = (email = '', password = '') => {
   return (dispatch, getState) => {
     return firebaseRef.authWithPassword({
       email,
       password
     }).then((authData) => {
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        token: authData.token,
-        uid: authData.uid
-      });
+      debugger;
+      dispatch(login(authData.token, authData.uid));
       dispatch(populateTodos());
       return authData.password.isTemporaryPassword;
     }, (error) => {
+      debugger;
       throw new Error(error.message);
     });
   }
 };
 
-export var logoutUser = () => {
+export var startLogout = () => {
   return (dispatch, getState) => {
-    console.log('Calling unauth')
     return firebaseRef.unauth().then(function () {
-      console.log('unauth complete')
-      dispatch({
-        type: 'LOGOUT'
-      });
+      dispatch(logout());
       return;
     }, (error) => {
       throw new Error(error.message);
@@ -142,5 +162,11 @@ export var showFlashMessage = (message, messageType = 'alert') => {
     type: 'SHOW_FLASH_MESSAGE',
     message,
     messageType
+  }
+};
+
+export var clearFlashMessage = () => {
+  return {
+    type: 'CLEAR_FLASH_MESSAGE'
   }
 };

@@ -31,6 +31,7 @@ module.exports = {
       applicationStyles: 'app/styles/app.scss',
       actions: 'app/actions/actions.jsx',
       reducers: 'app/reducers',
+      app: 'app',
       configureStore: 'app/store/configureStore.jsx',
       firebaseRef: 'app/firebase/firebase.jsx'
     },

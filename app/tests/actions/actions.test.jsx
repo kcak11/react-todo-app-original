@@ -1,7 +1,24 @@
-var expect = require('expect');
-var actions = require('actions');
+import expect from 'expect';
+import actions from 'actions';
+import {configure} from 'configureStore';
+import * as FBTestUtils from 'app/test-utils/firebase';
+
+var userOne;
 
 describe('Actions', () => {
+  beforeEach((callback) => {
+    FBTestUtils.generateUser().then((res) => {
+      userOne = res
+      callback();
+    })
+  });
+
+  afterEach((callback) => {
+    FBTestUtils.reset().then(() => {
+      callback();
+    })
+  });
+
   it('should generate action to change signup page', () => {
     var expectedAction = {
       type: 'CHANGE_SIGNUP',
@@ -96,6 +113,12 @@ describe('Actions', () => {
     var res = actions.clearFlashMessage();
 
     expect(res).toEqual(expectedAction);
+  });
+
+  it('should create new todo an dispatch action when complete', () => {
+    var store = configure();
+    var thunk = actions.createTodo('My todo text');
+
   });
 
 });

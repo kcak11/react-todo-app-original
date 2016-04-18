@@ -68,6 +68,7 @@ export var clearFlashMessage = () => {
   }
 };
 
+// TODO - How can I test that the proper action gets dispatched?
 export var createTodo = (text) => {
   return (dispatch, getState) => {
     var uid = getState().login.uid;

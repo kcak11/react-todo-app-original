@@ -1,18 +1,30 @@
-export default (state = {token: undefined, uid: undefined}, action) => {
+import _ from 'lodash';
+
+const defaultState = {
+  isLoading: false,
+  email: '',
+  password: ''
+};
+
+export default (state = defaultState, action) => {
+  var updates = {...action};
+  delete updates.type;
+
   switch (action.type) {
-    case 'LOGIN':
-      return {
-        ...state,
-        token: action.token,
-        uid: action.uid
+    case 'CHANGE_LOGIN':
+      {
+        return {
+          ...state,
+          ..._.pick(action, ['isLoading', 'email', 'password'])
+        };
       }
-    case 'LOGOUT':
-      return {
-        ...state,
-        token: undefined,
-        uid: undefined
+    case 'RESET_LOGIN':
+      {
+        return {
+          ...defaultState
+        };
       }
     default:
       return state;
-  }
+  };
 };

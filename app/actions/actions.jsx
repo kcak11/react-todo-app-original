@@ -10,6 +10,21 @@ export var changeSignup = (updates) => {
   };
 };
 
+export var resetSignup = () => {
+  return {type: 'RESET_SIGNUP'};
+};
+
+export var changeLogin = (updates) => {
+  return {
+    type: 'CHANGE_LOGIN',
+    ..._.pick(updates, ['isLoading', 'email', 'password'])
+  };
+};
+
+export var resetLogin = () => {
+  return {type: 'RESET_LOGIN'};
+};
+
 export var setSearchText = (searchText) => {
   return {
     type: 'SET_SEARCH_TEXT',
@@ -71,7 +86,7 @@ export var clearFlashMessage = () => {
 // TODO - How can I test that the proper action gets dispatched?
 export var createTodo = (text) => {
   return (dispatch, getState) => {
-    var uid = getState().login.uid;
+    var uid = getState().user.uid;
     var todosRef = getUserRef(uid).child('todos');
     var todo = {
       text,
@@ -91,7 +106,7 @@ export var createTodo = (text) => {
 
 export var populateTodos = (todos) => {
   return (dispatch, getState) => {
-    var uid = getState().login.uid;
+    var uid = getState().user.uid;
     var todosRef = getUserRef(uid).child('todos');
 
     todosRef.once('value', (snapshot) => {
@@ -108,7 +123,7 @@ export var populateTodos = (todos) => {
 
 export var toggleTodo = (id) => {
   return (dispatch, getState) => {
-    var uid = getState().login.uid;
+    var uid = getState().user.uid;
     var todoRef = getUserRef(uid).child(`todos/${id}`);
     var updates;
 
@@ -134,10 +149,8 @@ export var createUser = (email = '', password = '') => {
     }).then(() => {
       dispatch(showFlashMessage('Account created!', 'success'));
       hashHistory.push('/login');
-      return;
     }, (e) => {
       dispatch(showFlashMessage(e.message, 'error'));
-      throw new Error(e.message);
     });
   };
 };

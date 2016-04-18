@@ -15,7 +15,7 @@ import SetPassword from 'SetPassword';
 import App from 'App';
 
 // Check if there is already an id ready to go
-if (store.getState().login.uid) {
+if (store.getState().user.uid) {
   store.dispatch(actions.populateTodos());
 }
 

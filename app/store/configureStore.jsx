@@ -14,7 +14,7 @@ export var configure = (initialState = {}) => {
     }
 
     localStorage.setItem('login', JSON.stringify(
-      store.getState().login
+      store.getState().user
     ));
 
     return result
@@ -25,12 +25,12 @@ export var configure = (initialState = {}) => {
     let rawLogin = localStorage.getItem('login');
 
     if (rawLogin) {
-      initialState.login = JSON.parse(rawLogin);
+      initialState.user = JSON.parse(rawLogin);
     } else {
       throw new Error();
     }
   } catch (e) {
-    initialState.login = {};
+    initialState.user = {};
   }
 
 

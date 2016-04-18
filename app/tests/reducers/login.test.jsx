@@ -4,31 +4,33 @@ import login from 'reducers/login';
 
 describe('Login Reducer', () => {
 
-  it('should set the token and uid', () => {
+  it('should update login page state', () => {
     var action = {
-      type: 'LOGIN',
-      token: 'sometoken',
-      uid: 'someid'
+      type: 'CHANGE_LOGIN',
+      email: 'test@example.com',
+      password: 'somepass'
     };
-    var currentState = {};
-    var res = login(df(currentState), df(action));
+    var res = login(undefined, df(action));
 
-    expect(res.token).toEqual(action.token);
-    expect(res.uid).toEqual(action.uid);
+    expect(res.email).toEqual(action.email);
+    expect(res.password).toEqual(action.password);
+    expect(res.isLoading).toEqual(false);
   });
 
-  it('should clear the token and id', () => {
+  it('should clear login page', () => {
     var action = {
-      type: 'LOGOUT'
+      type: 'RESET_LOGIN'
     };
     var currentState = {
-      token: 'currenttoken',
-      uid: 'currentid'
+      isLoading: true,
+      email: 'andrew@example.com',
+      password: ''
     };
     var res = login(df(currentState), df(action));
 
-    expect(res.token).toNotExist();
-    expect(res.id).toNotExist();
+    expect(res.email).toEqual('');
+    expect(res.password).toEqual('');
+    expect(res.isLoading).toEqual(false);
   });
 
 });

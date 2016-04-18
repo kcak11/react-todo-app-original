@@ -6,18 +6,6 @@ import {configure} from 'configureStore';
 var userOne;
 
 describe('Actions', () => {
-  // beforeEach((callback) => {
-  //   FBTestUtils.generateUser().then((res) => {
-  //     userOne = res
-  //     callback();
-  //   })
-  // });
-  //
-  // afterEach((callback) => {
-  //   FBTestUtils.reset().then(() => {
-  //     callback();
-  //   })
-  // });
 
   it('should generate action to change signup page', () => {
     var expectedAction = {
@@ -25,6 +13,35 @@ describe('Actions', () => {
       email: 'test@example.com'
     };
     var res = actions.changeSignup({email: expectedAction.email});
+
+    expect(res).toEqual(expectedAction);
+  });
+
+  it('should generate action to reset signup page', () => {
+    var expectedAction = {
+      type: 'RESET_SIGNUP'
+    };
+    var res = actions.resetSignup();
+
+    expect(res).toEqual(expectedAction);
+  });
+
+  it('should generate action to change signup page', () => {
+    var expectedAction = {
+      type: 'CHANGE_LOGIN',
+      email: 'test@example.com',
+      password: 'pass123!'
+    };
+    var res = actions.changeLogin({email: expectedAction.email, password: expectedAction.password});
+
+    expect(res).toEqual(expectedAction);
+  });
+
+  it('should generate action to reset signup page', () => {
+    var expectedAction = {
+      type: 'RESET_LOGIN'
+    };
+    var res = actions.resetLogin();
 
     expect(res).toEqual(expectedAction);
   });

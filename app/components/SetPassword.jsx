@@ -54,7 +54,7 @@ export var SetPassword = React.createClass({
 export default connect(
   (state) => {
     return {
-      ...state.login
+      ...state.user
     }
   }
 )(SetPassword);

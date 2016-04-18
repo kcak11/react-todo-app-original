@@ -41,7 +41,7 @@ export var RequestReset = React.createClass({
 export default connect(
   (state) => {
     return {
-      ...state.login
+      ...state.user
     }
   }
 )(RequestReset);

@@ -149,12 +149,10 @@ export var startLogin = (email = '', password = '') => {
       email,
       password
     }).then((authData) => {
-      debugger;
       dispatch(login(authData.token, authData.uid));
       dispatch(populateTodos());
       return authData.password.isTemporaryPassword;
     }, (error) => {
-      debugger;
       throw new Error(error.message);
     });
   }

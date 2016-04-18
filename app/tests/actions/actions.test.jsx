@@ -1,23 +1,23 @@
 import expect from 'expect';
-import actions from 'actions';
+import * as actions from 'actions';
 import {configure} from 'configureStore';
-import * as FBTestUtils from 'app/test-utils/firebase';
+// import * as FBTestUtils from 'app/test-utils/firebase';
 
 var userOne;
 
 describe('Actions', () => {
-  beforeEach((callback) => {
-    FBTestUtils.generateUser().then((res) => {
-      userOne = res
-      callback();
-    })
-  });
-
-  afterEach((callback) => {
-    FBTestUtils.reset().then(() => {
-      callback();
-    })
-  });
+  // beforeEach((callback) => {
+  //   FBTestUtils.generateUser().then((res) => {
+  //     userOne = res
+  //     callback();
+  //   })
+  // });
+  //
+  // afterEach((callback) => {
+  //   FBTestUtils.reset().then(() => {
+  //     callback();
+  //   })
+  // });
 
   it('should generate action to change signup page', () => {
     var expectedAction = {

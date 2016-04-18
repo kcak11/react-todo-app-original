@@ -16,7 +16,7 @@ var notyDefaults = {
   }
 };
 
-var FlashMessage = React.createClass({
+export var FlashMessage = React.createClass({
   showFlashMessage: function () {
     var {dispatch} = this.props;
 

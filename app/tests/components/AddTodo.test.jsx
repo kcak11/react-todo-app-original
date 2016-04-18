@@ -1,10 +1,11 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var TestUtils = require('react-addons-test-utils');
-var expect = require('expect');
-var $ = require('jquery');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-addons-test-utils';
+import expect from 'expect';
+import $ from 'jquery'
 
-var {AddTodo} = require('AddTodo');
+import * as actions from 'actions';
+import {AddTodo} from 'AddTodo';
 
 describe('AddTodo', () => {
   it('should exist', () => {
@@ -24,7 +25,7 @@ describe('AddTodo', () => {
     addTodo.refs.todoText.value = todoText;
     TestUtils.Simulate.submit($el.find('form')[0]);
 
-    expect(spy).toHaveBeenCalledWith(action);
+    expect(spy).toHaveBeenCalled(actions.createTodo(todoText));
   });
 
   it('should not dispatch ADD_TODO when invalid todo text', () => {

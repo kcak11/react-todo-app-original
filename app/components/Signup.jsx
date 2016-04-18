@@ -8,6 +8,8 @@ export var Signup =  React.createClass({
     this.refs.email.focus();
   },
   handleChange: function (e) {
+    var {dispatch} = this.props;
+
     dispatch(actions.changeSignup({
       [e.target.name]: e.target.value
     }));

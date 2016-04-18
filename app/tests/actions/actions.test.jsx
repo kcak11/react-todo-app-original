@@ -2,6 +2,16 @@ var expect = require('expect');
 var actions = require('actions');
 
 describe('Actions', () => {
+  it('should generate action to change signup page', () => {
+    var expectedAction = {
+      type: 'CHANGE_SIGNUP',
+      email: 'test@example.com'
+    };
+    var res = actions.changeSignup({email: expectedAction.email});
+
+    expect(res).toEqual(expectedAction);
+  });
+
   it('should generate search text action', () => {
     var action = {
       type: 'SET_SEARCH_TEXT',
@@ -22,39 +32,70 @@ describe('Actions', () => {
   });
 
   it('should generate add todo action', () => {
-    var action = {
+    var expectedAction = {
       type: 'ADD_TODO',
-      text: 'Thing to do'
+      todo: {
+        id: '123',
+        text: 'Something todo',
+        completed: false,
+        completedAt: undefined,
+        createdAt: 82384324
+      }
     };
-    var res = actions.createTodo(action.text);
+    var res = actions.addTodo(expectedAction.todo);
 
-    expect(res).toEqual(action);
-  });
-
-  it('should generate add todos action object', () => {
-    var todos = [{
-      id: '111',
-      text: 'anything',
-      completed: false,
-      completedAt: undefined,
-      createdAt: 33000
-    }];
-    var action = {
-      type: 'ADD_TODOS',
-      todos
-    };
-    var res = actions.addTodos(todos);
-
-    expect(res).toEqual(action);
+    expect(res).toEqual(expectedAction);
   });
 
   it('should generate toggle todo action', () => {
-    var action = {
-      type: 'TOGGLE_TODO',
-      id: '123'
+    var expectedAction = {
+      type: 'UPDATE_TODO',
+      id: '123',
+      updates: {
+        completed: true
+      }
     };
-    var res = actions.toggleTodo(action.id);
+    var res = actions.updateTodo(expectedAction.id, {
+      completed: true
+    });
 
-    expect(res).toEqual(action);
+    expect(res).toEqual(expectedAction);
   });
+
+  it('should generate login action', () => {
+    var expectedAction = {
+      type: 'LOGIN',
+      token: '123token',
+      uid: '123uid'
+    };
+    var res = actions.login(expectedAction.token, expectedAction.uid);
+
+    expect(res).toEqual(expectedAction);
+  });
+
+  it('should generate logout action', () => {
+    var expectedAction = {type: 'LOGOUT'};
+    var res = actions.logout();
+
+    expect(res).toEqual(expectedAction);
+  });
+
+  it('should generate flash message action object', () => {
+    var expectedAction = {
+      type: 'SHOW_FLASH_MESSAGE',
+      message: 'My message',
+      messageType: 'alert'
+    };
+    var res = actions.showFlashMessage(expectedAction.message, expectedAction.messageType);
+
+    expect(res).toEqual(expectedAction);
+  });
+
+  it('should generate clear message action', () => {
+    var expectedAction = {type: 'CLEAR_FLASH_MESSAGE'};
+    var res = actions.clearFlashMessage();
+
+    expect(res).toEqual(expectedAction);
+  });
+
 });

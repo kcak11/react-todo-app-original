@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const defaultState = {
   isLoading: false,
   email: '',
@@ -13,7 +15,7 @@ export default (state = defaultState, action) => {
       {
         return {
           ...state,
-          ...updates
+          ..._.pick(action, ['isLoading', 'email', 'password'])
         };
       }
     case 'RESET_SIGNUP':

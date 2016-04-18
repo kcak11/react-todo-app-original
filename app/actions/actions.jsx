@@ -1,11 +1,12 @@
 import firebaseRef, {getUserRef} from 'firebaseRef';
 import {hashHistory} from 'react-router'
 import moment from 'moment';
+import _ from 'lodash';
 
-export var signupChange = (updates) => {
+export var changeSignup = (updates) => {
   return {
     type: 'CHANGE_SIGNUP',
-    updates
+    ..._.pick(updates, ['isLoading', 'email', 'password'])
   };
 };
 
@@ -35,6 +36,36 @@ export var updateTodo = (id, updates) => {
     id,
     updates
   };
+};
+
+//
+
+export var login = (token, uid) => {
+  return {
+    type: 'LOGIN',
+    token,
+    uid
+  };
+};
+
+export var logout = () => {
+  return {
+    type: 'LOGOUT'
+  };
+};
+
+export var showFlashMessage = (message, messageType = 'alert') => {
+  return {
+    type: 'SHOW_FLASH_MESSAGE',
+    message,
+    messageType
+  }
+};
+
+export var clearFlashMessage = () => {
+  return {
+    type: 'CLEAR_FLASH_MESSAGE'
+  }
 };
 
 export var createTodo = (text) => {
@@ -110,19 +141,6 @@ export var createUser = (email = '', password = '') => {
   };
 };
 
-export var login = (token, uid) => {
-  return {
-    type: 'LOGIN',
-    token,
-    uid
-  };
-};
-
-export var logout = () => {
-  return {
-    type: 'LOGOUT'
-  };
-};
 
 export var startLogin = (email = '', password = '') => {
   return (dispatch, getState) => {
@@ -161,19 +179,5 @@ export var requestReset = (email = '') => {
 export var changePassword = (opts = {}) => {
   return (dispatch, getState) => {
     return firebaseRef.changePassword(opts);
-  }
-};
-
-export var showFlashMessage = (message, messageType = 'alert') => {
-  return {
-    type: 'SHOW_FLASH_MESSAGE',
-    message,
-    messageType
-  }
-};
-
-export var clearFlashMessage = () => {
-  return {
-    type: 'CLEAR_FLASH_MESSAGE'
   }
 };

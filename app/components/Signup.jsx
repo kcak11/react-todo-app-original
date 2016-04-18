@@ -4,38 +4,33 @@ import {hashHistory} from 'react-router';
 import * as actions from 'actions'
 
 export var Signup =  React.createClass({
-  getInitialState: function () {
-    return {
-      email: '',
-      password: '',
-      isLoading: false
-    };
-  },
   componentDidMount: function () {
     this.refs.email.focus();
   },
   handleChange: function (e) {
-    this.setState({
+    dispatch(actions.signupChange({
       [e.target.name]: e.target.value
-    });
+    }));
   },
   handleSubmit: function (e) {
       var {dispatch} = this.props;
       e.preventDefault();
+      dispatch(actions.createUser(this.refs.email.value, this.refs.password.value));
 
-      this.setState({isLoading: true});
-      dispatch(actions.createUser(this.refs.email.value, this.refs.password.value)).then(() => {
-        this.setState({isLoading: false});
-      }, () => {
-        this.setState({
-          isLoading: false,
-          email: '',
-          password: ''
-        });
-      });
+      // // TODO - Should I remove the local state in favor of storing a global piece of state on the store?
+      // this.setState({isLoading: true});
+      // dispatch(actions.createUser(this.refs.email.value, this.refs.password.value)).then(() => {
+      //   this.setState({isLoading: false});
+      // }, () => {
+      //   this.setState({
+      //     isLoading: false,
+      //     email: '',
+      //     password: ''
+      //   });
+      // });
   },
   render: function () {
-    var {email, password, isLoading} = this.state;
+    var {email, password, isLoading} = this.props;
     var {handleChange} = this;
 
     return (
@@ -61,6 +56,6 @@ export var Signup =  React.createClass({
 
 export default connect(
   (state) => {
-    return {};
+    return state.signup;
   }
 )(Signup);

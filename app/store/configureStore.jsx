@@ -1,15 +1,17 @@
 var redux = require('redux');
-var {searchTextReducer, showCompletedReducer, todosReducer, loginReducer, flashMessageReducer} = require('reducers');
+import reducer from 'reducers/index';
+// var {searchTextReducer, showCompletedReducer, todosReducer, loginReducer, flashMessageReducer} = require('reducers');
 import thunk from 'redux-thunk';
 
 export var configure = (initialState = {}) => {
-  var reducer = redux.combineReducers({
-    searchText: searchTextReducer,
-    showCompleted: showCompletedReducer,
-    todos: todosReducer,
-    login: loginReducer,
-    flashMessage: flashMessageReducer
-  });
+
+  // var reducer = redux.combineReducers({
+  //   searchText: searchTextReducer,
+  //   showCompleted: showCompletedReducer,
+  //   todos: todosReducer,
+  //   login: loginReducer,
+  //   flashMessage: flashMessageReducer
+  // });
 
   const logger = store => next => action => {
     var result;

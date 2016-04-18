@@ -2,6 +2,13 @@ import firebaseRef, {getUserRef} from 'firebaseRef';
 import {hashHistory} from 'react-router'
 import moment from 'moment';
 
+export var signupChange = (updates) => {
+  return {
+    type: 'CHANGE_SIGNUP',
+    updates
+  };
+};
+
 export var setSearchText = (searchText) => {
   return {
     type: 'SET_SEARCH_TEXT',

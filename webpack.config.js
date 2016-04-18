@@ -30,7 +30,7 @@ module.exports = {
     alias: {
       applicationStyles: 'app/styles/app.scss',
       actions: 'app/actions/actions.jsx',
-      reducers: 'app/reducers/reducers.jsx',
+      reducers: 'app/reducers',
       configureStore: 'app/store/configureStore.jsx',
       firebaseRef: 'app/firebase/firebase.jsx'
     },

@@ -3,6 +3,7 @@ import flashMessage from 'reducers/flash-message';
 import user from 'reducers/user';
 import login from 'reducers/login';
 import searchText from 'reducers/search-text';
+import requestReset from 'reducers/request-reset';
 import showCompleted from 'reducers/show-completed';
 import signup from 'reducers/signup';
 import todos from 'reducers/todos';
@@ -13,6 +14,7 @@ export default combineReducers({
   login,
   searchText,
   showCompleted,
+  requestReset,
   signup,
   todos
 });

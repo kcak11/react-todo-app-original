@@ -26,6 +26,25 @@ describe('Actions', () => {
     expect(res).toEqual(expectedAction);
   });
 
+  it('should generate action to change request reset page', () => {
+    var expectedAction = {
+      type: 'CHANGE_REQUEST_RESET',
+      email: 'test@example.com'
+    };
+    var res = actions.changeRequestReset({email: expectedAction.email});
+
+    expect(res).toEqual(expectedAction);
+  });
+
+  it('should generate action to reset request signup page', () => {
+    var expectedAction = {
+      type: 'RESET_REQUEST_RESET'
+    };
+    var res = actions.resetRequestReset();
+
+    expect(res).toEqual(expectedAction);
+  });
+
   it('should generate action to change signup page', () => {
     var expectedAction = {
       type: 'CHANGE_LOGIN',

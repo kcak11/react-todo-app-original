@@ -4,28 +4,30 @@ var {hashHistory} = require('react-router');
 import * as actions from 'actions';
 
 export var RequestReset = React.createClass({
+  handleChange: function (e) {
+    var {dispatch} = this.props;
+
+    dispatch(actions.changeRequestReset({
+      [e.target.name]: e.target.value
+    }));
+  },
   handleSubmit: function (e) {
-      var {dispatch} = this.props;
-
+      var {email, isLoading, dispatch} = this.props;
       e.preventDefault();
-
-      // TODO - USE ON CHANGE FOR EMAIL STATE SO WE CAN USE SETSTATE TO CLEAR EMAIL
-      dispatch(actions.requestReset(this.refs.email.value)).then(() => {
-        dispatch(actions.showFlashMessage('We sent an email with reset instructions.', 'success'));
-        hashHistory.push('/login');
-      }, (e) => {
-        dispatch(actions.showFlashMessage(e.message, 'error'));
-      })
+      dispatch(actions.requestReset(email));
   },
   render: function() {
+    var {email, isLoading} = this.props;
+    var {handleChange} = this;
+    
     return (
       <div className="auth-page">
         <div className="auth-page__box">
           <h3 className="text-center">Reset Password</h3>
 
           <form onSubmit={this.handleSubmit}>
-            <input type="text" name="email" ref="email" placeholder="Email"/>
-            <button className="button expanded">Reset</button>
+            <input type="text" name="email" ref="email" placeholder="Email" value={email} onChange={handleChange}/>
+            <button className="button expanded" disabled={isLoading}>Reset</button>
           </form>
 
           <p className="auth-page__actions">
@@ -41,7 +43,7 @@ export var RequestReset = React.createClass({
 export default connect(
   (state) => {
     return {
-      ...state.user
+      ...state.requestReset
     }
   }
 )(RequestReset);

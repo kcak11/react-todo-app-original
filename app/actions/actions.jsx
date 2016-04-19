@@ -188,27 +188,6 @@ export var startLogin = (email = '', password = '') => {
   }
 };
 
-// handleSubmit: function (e) {
-//     var {dispatch} = this.props;
-//
-//     e.preventDefault();
-//
-//     this.setState({isLoading: true});
-//     dispatch(actions.startLogin(this.refs.email.value, this.refs.password.value)).then((isTemporaryPassword) => {
-//       this.setState({isLoading: false});
-//       if (isTemporaryPassword) {
-//         hashHistory.push('/set-password');
-//         dispatch(actions.showFlashMessage('Please set a new password', 'success'));
-//       } else {
-//         hashHistory.push('/todos');
-//       }
-//     }, (e) => {
-//       this.setState({password: undefined, isLoading: false});
-//       dispatch(actions.showFlashMessage(e.message, 'error'));
-//
-//     })
-// },
-
 export var startLogout = () => {
   return (dispatch, getState) => {
     return firebaseRef.unauth().then(function () {
@@ -220,10 +199,29 @@ export var startLogout = () => {
   }
 };
 
+export var changeRequestReset= (updates) => {
+  return {
+    type: 'CHANGE_REQUEST_RESET',
+    ..._.pick(updates, ['isLoading', 'email', 'password'])
+  };
+};
+
+export var resetRequestReset = () => {
+  return {type: 'RESET_REQUEST_RESET'};
+};
+
 export var requestReset = (email = '') => {
   return (dispatch, getState) => {
-    return firebaseRef.resetPassword({email});
-  }
+    dispatch(changeRequestReset({isLoading: true}));
+    return firebaseRef.resetPassword({email}).then(() => {
+      dispatch(resetRequestReset());
+      dispatch(showFlashMessage('We sent an email with reset instructions.', 'success'));
+      hashHistory.push('/login');
+    }, (e) => {
+      dispatch(resetRequestReset());
+      dispatch(showFlashMessage(e.message, 'error'));
+    });
+  };
 };
 
 export var changePassword = (opts = {}) => {

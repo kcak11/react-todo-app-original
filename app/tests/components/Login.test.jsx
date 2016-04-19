@@ -25,19 +25,6 @@ describe('Login', () => {
     expect(Login).toExist();
   });
 
-  it('should dispatch action on input change email', () => {
-    login.refs.email.value = exampleEmail;
-    TestUtils.Simulate.change(login.refs.email);
-
-    expect(spy).toHaveBeenCalledWith(actions.changeLogin({email: exampleEmail}));
-  });
-
-  it('should dispatch action on input change password', () => {
-    login.refs.password.value = examplePassword;
-    TestUtils.Simulate.change(login.refs.password);
-
-    expect(spy).toHaveBeenCalledWith(actions.changeLogin({password: examplePassword}));
-  });
 
   it('should dispatch user creation on submit', () => {
     login.refs.email.value = exampleEmail;

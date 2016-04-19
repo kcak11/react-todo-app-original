@@ -4,28 +4,6 @@ import moment from 'moment';
 import _ from 'lodash';
 import {reset} from 'redux-form';
 
-export var changeSignup = (updates) => {
-  return {
-    type: 'CHANGE_SIGNUP',
-    ..._.pick(updates, ['isLoading', 'email', 'password'])
-  };
-};
-
-export var resetSignup = () => {
-  return {type: 'RESET_SIGNUP'};
-};
-
-export var changeLogin = (updates) => {
-  return {
-    type: 'CHANGE_LOGIN',
-    ..._.pick(updates, ['isLoading', 'email', 'password'])
-  };
-};
-
-export var resetLogin = () => {
-  return {type: 'RESET_LOGIN'};
-};
-
 export var setSearchText = (searchText) => {
   return {
     type: 'SET_SEARCH_TEXT',
@@ -149,13 +127,13 @@ export var toggleTodo = (id) => {
 
 export var createUser = (email = '', password = '') => {
   return (dispatch, getState) => {
-    dispatch(changeSignup({isLoading: true}));
     return firebaseRef.createUser({
       email,
       password
     }).then(() => {
       dispatch(showFlashMessage('Account created!', 'success'));
       dispatch(reset('signup'));
+      hashHistory.push('/login');
     }, (e) => {
       dispatch(showFlashMessage(e.message, 'error'));
       throw new Error(e.message);
@@ -166,14 +144,12 @@ export var createUser = (email = '', password = '') => {
 
 export var startLogin = (email = '', password = '') => {
   return (dispatch, getState) => {
-    dispatch(changeLogin({isLoading: true}));
     return firebaseRef.authWithPassword({
       email,
       password
     }).then((authData) => {
       dispatch(login(authData.token, authData.uid));
       dispatch(populateTodos());
-      dispatch(changeLogin({isLoading: false}));
 
       if (authData.password.isTemporaryPassword) {
         hashHistory.push('/set-password');
@@ -182,8 +158,9 @@ export var startLogin = (email = '', password = '') => {
         hashHistory.push('/todos');
       }
     }, (e) => {
-      dispatch(resetLogin());
+      dispatch(reset('login'));
       dispatch(showFlashMessage(e.message, 'error'));
+      throw new Error(e.message);
     });
   }
 };

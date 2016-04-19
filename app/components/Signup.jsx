@@ -18,13 +18,11 @@ export var Signup = React.createClass({
 
     dispatch(actions.createUser(email.value, password.value)).then(() => {
       this.setState({isLoading: false});
-      hashHistory.push('/login');
     }, () => {
       this.setState({isLoading: false});
     });
   },
   render: function() {
-    const {handleChange} = this;
     const {isLoading} = this.state;
     const {fields: {password, email}} = this.props;
 

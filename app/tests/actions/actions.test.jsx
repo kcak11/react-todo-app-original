@@ -7,25 +7,6 @@ var userOne;
 
 describe('Actions', () => {
 
-  it('should generate action to change signup page', () => {
-    var expectedAction = {
-      type: 'CHANGE_SIGNUP',
-      email: 'test@example.com'
-    };
-    var res = actions.changeSignup({email: expectedAction.email});
-
-    expect(res).toEqual(expectedAction);
-  });
-
-  it('should generate action to reset signup page', () => {
-    var expectedAction = {
-      type: 'RESET_SIGNUP'
-    };
-    var res = actions.resetSignup();
-
-    expect(res).toEqual(expectedAction);
-  });
-
   it('should generate action to change request reset page', () => {
     var expectedAction = {
       type: 'CHANGE_REQUEST_RESET',
@@ -41,26 +22,6 @@ describe('Actions', () => {
       type: 'RESET_REQUEST_RESET'
     };
     var res = actions.resetRequestReset();
-
-    expect(res).toEqual(expectedAction);
-  });
-
-  it('should generate action to change signup page', () => {
-    var expectedAction = {
-      type: 'CHANGE_LOGIN',
-      email: 'test@example.com',
-      password: 'pass123!'
-    };
-    var res = actions.changeLogin({email: expectedAction.email, password: expectedAction.password});
-
-    expect(res).toEqual(expectedAction);
-  });
-
-  it('should generate action to reset signup page', () => {
-    var expectedAction = {
-      type: 'RESET_LOGIN'
-    };
-    var res = actions.resetLogin();
 
     expect(res).toEqual(expectedAction);
   });

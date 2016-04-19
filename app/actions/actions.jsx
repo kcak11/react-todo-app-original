@@ -2,6 +2,7 @@ import firebaseRef, {getUserRef} from 'firebaseRef';
 import {hashHistory} from 'react-router'
 import moment from 'moment';
 import _ from 'lodash';
+import {reset} from 'redux-form';
 
 export var changeSignup = (updates) => {
   return {
@@ -154,11 +155,10 @@ export var createUser = (email = '', password = '') => {
       password
     }).then(() => {
       dispatch(showFlashMessage('Account created!', 'success'));
-      dispatch(changeSignup({isLoading: false}));
-      hashHistory.push('/login');
+      dispatch(reset('signup'));
     }, (e) => {
       dispatch(showFlashMessage(e.message, 'error'));
-      dispatch(changeSignup({isLoading: false}));
+      throw new Error(e.message);
     });
   };
 };

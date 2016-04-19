@@ -1,24 +1,32 @@
 import React from 'react';
+import {reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import {hashHistory} from 'react-router';
 import * as actions from 'actions'
 
-export var Signup =  React.createClass({
-  handleChange: function (e) {
-    var {dispatch} = this.props;
+export var Signup = React.createClass({
+  getInitialState: function () {
+    return {
+      isLoading: false
+    };
+  },
+  handleSubmit: function(e) {
+    const {dispatch, fields: {password, email}} = this.props;
 
-    dispatch(actions.changeSignup({
-      [e.target.name]: e.target.value
-    }));
+    e.preventDefault();
+    this.setState({isLoading: true});
+
+    dispatch(actions.createUser(email.value, password.value)).then(() => {
+      this.setState({isLoading: false});
+      hashHistory.push('/login');
+    }, () => {
+      this.setState({isLoading: false});
+    });
   },
-  handleSubmit: function (e) {
-      var {dispatch, email, password} = this.props;
-      e.preventDefault();
-      dispatch(actions.createUser(email, password));
-  },
-  render: function () {
-    var {email, password, isLoading} = this.props;
-    var {handleChange} = this;
+  render: function() {
+    const {handleChange} = this;
+    const {isLoading} = this.state;
+    const {fields: {password, email}} = this.props;
 
     return (
       <div className="auth-page">
@@ -26,8 +34,8 @@ export var Signup =  React.createClass({
           <h3 className="text-center">Signup</h3>
 
           <form onSubmit={this.handleSubmit}>
-            <input autoFocus type="text" name="email" ref="email" placeholder="Email" value={email} onChange={handleChange}/>
-            <input type="password" name="password" ref="password" placeholder="Password" value={password} onChange={handleChange}/>
+            <input autoFocus type="text" ref="email" placeholder="Email" {...email}/>
+            <input type="password" name="password" ref="password" placeholder="Password" {...password}/>
             <button className="button expanded" disabled={isLoading}>Create Account</button>
           </form>
 
@@ -41,8 +49,7 @@ export var Signup =  React.createClass({
   }
 });
 
-export default connect(
-  (state) => {
-    return state.signup;
-  }
-)(Signup);
+export default reduxForm({
+  form: 'signup',
+  fields: ['email', 'password']
+})(Signup);

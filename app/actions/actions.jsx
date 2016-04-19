@@ -32,8 +32,6 @@ export var updateTodo = (id, updates) => {
   };
 };
 
-//
-
 export var login = (token, uid) => {
   return {
     type: 'LOGIN',
@@ -174,17 +172,6 @@ export var startLogout = () => {
       throw new Error(error.message);
     });
   }
-};
-
-export var changeRequestReset= (updates) => {
-  return {
-    type: 'CHANGE_REQUEST_RESET',
-    ..._.pick(updates, ['isLoading', 'email', 'password'])
-  };
-};
-
-export var resetRequestReset = () => {
-  return {type: 'RESET_REQUEST_RESET'};
 };
 
 export var requestReset = (email = '') => {

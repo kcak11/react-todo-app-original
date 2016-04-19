@@ -27,29 +27,11 @@ export var SetPassword = React.createClass({
       this.setState({isLoading: false});
     });
   },
-  // handleSubmit: function (e) {
-  //     var {dispatch} = this.props;
-  //     var data = {
-  //       email: this.refs.email.value,
-  //       oldPassword: this.refs.oldPassword.value,
-  //       newPassword: this.refs.newPassword.value
-  //     }
-  //
-  //     e.preventDefault();
-  //
-  //     // TODO - USE ON CHANGE FOR EMAIL STATE SO WE CAN USE SETSTATE TO CLEAR EMAIL
-  //     dispatch(actions.changePassword(data)).then(() => {
-  //       // TODO - this should be part of the api - remove firebaseRef import
-  //       dispatch(actions.showFlashMessage('Password reset!', 'success'));
-  //       hashHistory.push('/todos');
-  //     }, (e) => {
-  //       dispatch(actions.showFlashMessage(e.message, 'error'));
-  //     })
-  // },
+
   render: function() {
     const {isLoading} = this.state;
     const {fields: {email, oldPassword, newPassword}} = this.props;
-    
+
     return (
       <div className="auth-page">
         <div className="auth-page__box">

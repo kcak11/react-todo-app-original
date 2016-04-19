@@ -203,6 +203,12 @@ export var requestReset = (email = '') => {
 
 export var changePassword = (opts = {}) => {
   return (dispatch, getState) => {
-    return firebaseRef.changePassword(opts);
+    return firebaseRef.changePassword(opts).then(() => {
+      dispatch(showFlashMessage('Password reset!', 'success'));
+      hashHistory.push('/todos');
+    }, (error) => {
+      dispatch(showFlashMessage(error.message, 'error'));
+      throw new Error(error.message);
+    })
   }
 };

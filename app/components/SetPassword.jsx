@@ -1,44 +1,65 @@
 var React = require('react');
 var {connect} = require('react-redux');
+import {reduxForm} from 'redux-form';
 var {hashHistory} = require('react-router');
 import firebaseRef, {getUserRef} from 'firebaseRef';
 import * as actions from 'actions';
 
 export var SetPassword = React.createClass({
-  handleSubmit: function (e) {
-      var {dispatch} = this.props;
-      var data = {
-        email: this.refs.email.value,
-        oldPassword: this.refs.oldPassword.value,
-        newPassword: this.refs.newPassword.value
-      }
-
-      e.preventDefault();
-
-      // TODO - USE ON CHANGE FOR EMAIL STATE SO WE CAN USE SETSTATE TO CLEAR EMAIL
-      dispatch(actions.changePassword(data)).then(() => {
-        // TODO - this should be part of the api - remove firebaseRef import
-        dispatch(actions.showFlashMessage('Password reset!', 'success'));
-        if (firebaseRef.getAuth()) {
-          hashHistory.push('/todos');
-        } else {
-          hashHistory.push('/login');
-        }
-      }, (e) => {
-        dispatch(actions.showFlashMessage(e.message, 'error'));
-      })
+  getInitialState: function () {
+    return {
+      isLoading: false
+    };
   },
+  handleSubmit: function(e) {
+    const {dispatch, fields: {email, oldPassword, newPassword}} = this.props;
+
+    e.preventDefault();
+    this.setState({isLoading: true});
+
+    dispatch(actions.changePassword({
+      email: email.value,
+      oldPassword: oldPassword.value,
+      newPassword: newPassword.value
+    })).then(() => {
+      this.setState({isLoading: false});
+    }, () => {
+      this.setState({isLoading: false});
+    });
+  },
+  // handleSubmit: function (e) {
+  //     var {dispatch} = this.props;
+  //     var data = {
+  //       email: this.refs.email.value,
+  //       oldPassword: this.refs.oldPassword.value,
+  //       newPassword: this.refs.newPassword.value
+  //     }
+  //
+  //     e.preventDefault();
+  //
+  //     // TODO - USE ON CHANGE FOR EMAIL STATE SO WE CAN USE SETSTATE TO CLEAR EMAIL
+  //     dispatch(actions.changePassword(data)).then(() => {
+  //       // TODO - this should be part of the api - remove firebaseRef import
+  //       dispatch(actions.showFlashMessage('Password reset!', 'success'));
+  //       hashHistory.push('/todos');
+  //     }, (e) => {
+  //       dispatch(actions.showFlashMessage(e.message, 'error'));
+  //     })
+  // },
   render: function() {
+    const {isLoading} = this.state;
+    const {fields: {email, oldPassword, newPassword}} = this.props;
+    
     return (
       <div className="auth-page">
         <div className="auth-page__box">
           <h3 className="text-center">Reset Password</h3>
 
           <form onSubmit={this.handleSubmit}>
-            <input type="text" name="email" ref="email" placeholder="Email"/>
-            <input type="password" name="oldPassword" ref="oldPassword" placeholder="Current password"/>
-            <input type="password" name="newPassword" ref="newPassword" placeholder="New password"/>
-            <button className="button expanded">Reset</button>
+            <input type="text" ref="email" placeholder="Email" {...email}/>
+            <input type="password" ref="oldPassword" placeholder="Current password" {...oldPassword}/>
+            <input type="password" ref="newPassword" placeholder="New password" {...newPassword}/>
+            <button className="button expanded" disabled={isLoading}>Reset</button>
           </form>
 
           <p className="auth-page__actions">
@@ -51,10 +72,7 @@ export var SetPassword = React.createClass({
   }
 });
 
-export default connect(
-  (state) => {
-    return {
-      ...state.user
-    }
-  }
-)(SetPassword);
+export default reduxForm({
+  form: 'setPassword',
+  fields: ['email', 'oldPassword', 'newPassword']
+})(SetPassword);

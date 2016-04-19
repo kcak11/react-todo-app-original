@@ -26,7 +26,7 @@ export var Signup =  React.createClass({
           <h3 className="text-center">Signup</h3>
 
           <form onSubmit={this.handleSubmit}>
-            <input type="text" name="email" ref="email" placeholder="Email" value={email} onChange={handleChange}/>
+            <input autoFocus type="text" name="email" ref="email" placeholder="Email" value={email} onChange={handleChange}/>
             <input type="password" name="password" ref="password" placeholder="Password" value={password} onChange={handleChange}/>
             <button className="button expanded" disabled={isLoading}>Create Account</button>
           </form>
@@ -35,7 +35,7 @@ export var Signup =  React.createClass({
             <a href="#/login">Login</a>
             <a href="#/request-reset">Reset</a>
           </p>
-      </div>
+        </div>
       </div>
     )
   }

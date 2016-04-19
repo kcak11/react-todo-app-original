@@ -111,6 +111,11 @@ export var populateTodos = (todos) => {
 
     todosRef.once('value', (snapshot) => {
       var val = snapshot.val();
+
+      if (!val) {
+        return;
+      }
+
       var todos = Object.keys(val).map((key) => {
         dispatch(addTodo({
           ...val[key],
@@ -143,14 +148,17 @@ export var toggleTodo = (id) => {
 
 export var createUser = (email = '', password = '') => {
   return (dispatch, getState) => {
+    dispatch(changeSignup({isLoading: true}));
     return firebaseRef.createUser({
       email,
       password
     }).then(() => {
       dispatch(showFlashMessage('Account created!', 'success'));
+      dispatch(changeSignup({isLoading: false}));
       hashHistory.push('/login');
     }, (e) => {
       dispatch(showFlashMessage(e.message, 'error'));
+      dispatch(changeSignup({isLoading: false}));
     });
   };
 };
@@ -158,18 +166,48 @@ export var createUser = (email = '', password = '') => {
 
 export var startLogin = (email = '', password = '') => {
   return (dispatch, getState) => {
+    dispatch(changeLogin({isLoading: true}));
     return firebaseRef.authWithPassword({
       email,
       password
     }).then((authData) => {
       dispatch(login(authData.token, authData.uid));
       dispatch(populateTodos());
-      return authData.password.isTemporaryPassword;
-    }, (error) => {
-      throw new Error(error.message);
+      dispatch(changeLogin({isLoading: false}));
+
+      if (authData.password.isTemporaryPassword) {
+        hashHistory.push('/set-password');
+        dispatch(showFlashMessage('Please set a new password', 'success'));
+      } else {
+        hashHistory.push('/todos');
+      }
+    }, (e) => {
+      dispatch(resetLogin());
+      dispatch(showFlashMessage(e.message, 'error'));
     });
   }
 };
+
+// handleSubmit: function (e) {
+//     var {dispatch} = this.props;
+//
+//     e.preventDefault();
+//
+//     this.setState({isLoading: true});
+//     dispatch(actions.startLogin(this.refs.email.value, this.refs.password.value)).then((isTemporaryPassword) => {
+//       this.setState({isLoading: false});
+//       if (isTemporaryPassword) {
+//         hashHistory.push('/set-password');
+//         dispatch(actions.showFlashMessage('Please set a new password', 'success'));
+//       } else {
+//         hashHistory.push('/todos');
+//       }
+//     }, (e) => {
+//       this.setState({password: undefined, isLoading: false});
+//       dispatch(actions.showFlashMessage(e.message, 'error'));
+//
+//     })
+// },
 
 export var startLogout = () => {
   return (dispatch, getState) => {

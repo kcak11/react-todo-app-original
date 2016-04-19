@@ -4,42 +4,23 @@ var {hashHistory} = require('react-router');
 import * as actions from 'actions';
 
 export var Login = React.createClass({
-  getInitialState: function () {
-    return {
-      isLoading: false
-    };
-  },
-  componentDidMount: function () {
-    this.refs.email.focus();
-  },
   handleChange: function (e) {
-    this.setState({
+    var {dispatch} = this.props;
+
+    dispatch(actions.changeLogin({
       [e.target.name]: e.target.value
-    });
+    }));
   },
   handleSubmit: function (e) {
-      var {dispatch} = this.props;
-
+      var {dispatch, email, password} = this.props;
       e.preventDefault();
-
-      this.setState({isLoading: true});
-      dispatch(actions.startLogin(this.refs.email.value, this.refs.password.value)).then((isTemporaryPassword) => {
-        this.setState({isLoading: false});
-        if (isTemporaryPassword) {
-          hashHistory.push('/set-password');
-          dispatch(actions.showFlashMessage('Please set a new password', 'success'));
-        } else {
-          hashHistory.push('/todos');
-        }
-      }, (e) => {
-        this.setState({password: undefined, isLoading: false});
-        dispatch(actions.showFlashMessage(e.message, 'error'));
-
-      })
+      dispatch(actions.startLogin(email, password));
   },
   render: function() {
-    var {email, password, isLoading} = this.state;
+    var {email, password, isLoading} = this.props;
     var {handleChange} = this;
+
+    console.log('Login isLoading', isLoading);
 
     return (
       <div className="auth-page">
@@ -47,7 +28,7 @@ export var Login = React.createClass({
           <h3 className="text-center">Login</h3>
 
           <form onSubmit={this.handleSubmit}>
-            <input type="text" name="email" ref="email" placeholder="Email" value={email} onChange={handleChange}/>
+            <input autoFocus type="text" name="email" ref="email" placeholder="Email" value={email} onChange={handleChange}/>
             <input type="password" name="password" ref="password" placeholder="Password" value={password} onChange={handleChange}/>
             <button className="button expanded" disabled={isLoading}>Login</button>
           </form>
@@ -65,7 +46,7 @@ export var Login = React.createClass({
 export default connect(
   (state) => {
     return {
-      ...state.user
+      ...state.login
     }
   }
 )(Login);

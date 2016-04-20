@@ -167,6 +167,7 @@ export var startLogout = () => {
   return (dispatch, getState) => {
     return firebaseRef.unauth().then(function () {
       dispatch(logout());
+      hashHistory.push('/login');
       return;
     }, (error) => {
       throw new Error(error.message);

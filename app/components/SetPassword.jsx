@@ -36,7 +36,7 @@ export var SetPassword = React.createClass({
           <h3 className="text-center">Reset Password</h3>
 
           <form onSubmit={this.handleSubmit}>
-            <input type="text" ref="email" placeholder="Email" {...email}/>
+            <input autoFocus type="email" ref="email" placeholder="Email" {...email}/>
             <input type="password" ref="oldPassword" placeholder="Current password" {...oldPassword}/>
             <input type="password" ref="newPassword" placeholder="New password" {...newPassword}/>
             <button className="button expanded" disabled={isLoading}>Reset</button>

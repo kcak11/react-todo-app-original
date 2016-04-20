@@ -23,11 +23,9 @@ export var Profile = React.createClass({
                 }}>
                   Update Password
                 </a>
-                <a href="#" onClick={(e) => {
+                <a href="#" ref="logout" onClick={(e) => {
                   e.preventDefault();
-                  dispatch(actions.startLogout()).then(() => {
-                    hashHistory.push('/login');
-                  });
+                  dispatch(actions.startLogout());
                 }}>
                   Logout
                 </a>
@@ -40,10 +38,4 @@ export var Profile = React.createClass({
   }
 });
 
-export default connect(
-  (state) => {
-    return {
-      ...state.user
-    };
-  }
-)(Profile);
+export default connect()(Profile);

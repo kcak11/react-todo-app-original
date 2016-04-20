@@ -24,7 +24,7 @@ describe('Login', () => {
     expect(Login).toExist();
   });
 
-  it('should dispatch user creation on submit', (done) => {
+  it('should dispatch login on submit', (done) => {
     var {spy, promiseSpy, completedPromise} = createPromiseSpy(true);
     var login = TestUtils.renderIntoDocument(<Login fields={fieldData} dispatch={promiseSpy}/>);
     var $el = $(ReactDOM.findDOMNode(login));
@@ -39,5 +39,4 @@ describe('Login', () => {
       done();
     });
   });
-
 });

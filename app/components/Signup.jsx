@@ -1,6 +1,5 @@
 import React from 'react';
 import {reduxForm} from 'redux-form';
-import {connect} from 'react-redux';
 import {hashHistory} from 'react-router';
 import * as actions from 'actions'
 
@@ -32,8 +31,8 @@ export var Signup = React.createClass({
           <h3 className="text-center">Signup</h3>
 
           <form onSubmit={this.handleSubmit}>
-            <input autoFocus type="text" ref="email" placeholder="Email" {...email}/>
-            <input type="password" name="password" ref="password" placeholder="Password" {...password}/>
+            <input autoFocus type="text" placeholder="Email" {...email}/>
+            <input type="password" ref="password" placeholder="Password" {...password}/>
             <button className="button expanded" disabled={isLoading}>Create Account</button>
           </form>
 

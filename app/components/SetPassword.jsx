@@ -1,8 +1,6 @@
 var React = require('react');
-var {connect} = require('react-redux');
 import {reduxForm} from 'redux-form';
 var {hashHistory} = require('react-router');
-import firebaseRef, {getUserRef} from 'firebaseRef';
 import * as actions from 'actions';
 
 export var SetPassword = React.createClass({

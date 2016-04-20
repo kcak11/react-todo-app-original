@@ -1,6 +1,5 @@
 var React = require('react');
 import {reduxForm} from 'redux-form';
-var {connect} = require('react-redux');
 var {hashHistory} = require('react-router');
 import * as actions from 'actions';
 
@@ -32,7 +31,7 @@ export var RequestReset = React.createClass({
           <h3 className="text-center">Reset Password</h3>
 
           <form onSubmit={this.handleSubmit}>
-            <input type="text" name="email" ref="email" placeholder="Email" {...email}/>
+            <input autoFocus type="text" ref="email" placeholder="Email" {...email}/>
             <button className="button expanded" disabled={isLoading}>Reset</button>
           </form>
 

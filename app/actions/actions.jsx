@@ -176,13 +176,10 @@ export var startLogout = () => {
 
 export var requestReset = (email = '') => {
   return (dispatch, getState) => {
-    dispatch(changeRequestReset({isLoading: true}));
     return firebaseRef.resetPassword({email}).then(() => {
-      dispatch(resetRequestReset());
       dispatch(showFlashMessage('We sent an email with reset instructions.', 'success'));
       hashHistory.push('/login');
     }, (e) => {
-      dispatch(resetRequestReset());
       dispatch(showFlashMessage(e.message, 'error'));
     });
   };

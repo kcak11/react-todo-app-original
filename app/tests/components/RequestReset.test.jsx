@@ -4,34 +4,35 @@ import TestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import $ from 'jquery'
 
+import createPromiseSpy from 'app/test-utils/promise-spy';
 import * as actions from 'actions';
 import {RequestReset} from 'RequestReset';
 
-describe('Request Reset', () => {
-  // Test variables
+describe('RequestReset', () => {
   const exampleEmail = 'test@example.com';
-  const examplePassword = 'password123!';
-  // var spy;
-  // var requestReset;
-  // var $el;
-  //
-  // beforeEach(() => {
-  //   spy = expect.createSpy();
-  //   requestReset = TestUtils.renderIntoDocument(<RequestReset dispatch={spy}/>);
-  //   $el = $(ReactDOM.findDOMNode(requestReset));
-  // });
+  const fieldData = {
+    email: {
+      value: exampleEmail
+    }
+  };
 
   it('should exist', () => {
     expect(RequestReset).toExist();
   });
 
+  it('should dispatch request reset on submit', (done) => {
+    var {spy, promiseSpy, completedPromise} = createPromiseSpy(true);
+    var requestReset = TestUtils.renderIntoDocument(<RequestReset fields={fieldData} dispatch={promiseSpy}/>);
+    var $el = $(ReactDOM.findDOMNode(requestReset));
 
-  // it('should dispatch request reset on submit', () => {
-  //   requestReset.refs.email.value = exampleEmail;
-  //   requestReset.refs.password.value = examplePassword;
-  //   TestUtils.Simulate.submit($el.find('form')[0]);
-  //
-  //   expect(spy).toHaveBeenCalledWith(actions.requestReset(exampleEmail));
-  // });
+    TestUtils.Simulate.submit($el.find('form')[0]);
 
+    expect(requestReset.state.isLoading).toEqual(true);
+    expect(spy).toHaveBeenCalledWith(actions.requestReset(exampleEmail));
+
+    completedPromise.then(() => {
+      expect(requestReset.state.isLoading).toEqual(false);
+      done();
+    });
+  });
 });

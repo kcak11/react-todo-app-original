@@ -1,40 +1,37 @@
-// I want a logged in userref, with exisitng todos,
-// Logged out user ref
 import firebaseRef, {getUserRef} from 'firebaseRef';
+import moment from 'moment';
 
-export var ref = firebaseRef;
+var todo = {
+  text: 'Something to do',
+  completed: false,
+  createdAt: moment().unix(),
+  completedAt: null
+};
 
-export var generateUser = (cb) => {
-  var email = 'test@example.com';
-  var password = 'password123!';
-  var ref;
+export const email = 'test@example.com';
+export const password = 'password123!';
+export const badPassword = 'password123@';
 
-  return firebaseRef.createUser({
-    email,
-    password
-  }).then(() => {
-    return firebaseRef.authWithPassword({
-      email,
-      password
+export var login = () => {
+  return firebaseRef.createUser({email, password}).then(() => {
+    return firebaseRef.authWithPassword({email, password});
+  }).then(function (authData) {
+    var todoRef = getUserRef(authData.uid).child('todos').push(todo);
+    return todoRef.then(() => {
+      return Promise.resolve({
+        todoId: todoRef.key(),
+        uid: authData.uid
+      });
     });
-  }).then((authData) => {
-    ref = getUserRef(authData.uid);
-
-    return {
-      email,
-      password,
-      ref
-    }
-  })
+  });
 };
 
-export var reset = (cb) => {
-  return firebaseRef.unauth();
+export var createUser = () => {
+  return firebaseRef.createUser({email, password});
 };
 
-// export var userOneEmail = 'text@example.com';
-// export var userOnePassword = 'password123!';
-// export var userOneRef;
-// export var loggedInUserWithTodos = () => {
-//
-// }
+export var reset = (done) => {
+  return firebaseRef.removeUser({email, password}).then(() => {
+    return firebaseRef.unauth();
+  });
+};

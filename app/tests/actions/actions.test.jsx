@@ -1,9 +1,13 @@
 import expect from 'expect';
 import * as actions from 'actions';
 import {configure} from 'configureStore';
-// import * as FBTestUtils from 'app/test-utils/firebase';
+import {email, password, badPassword, reset, login, createUser, createSampleTodo} from 'app/test-utils/firebase';
 
-var userOne;
+var createGetState = (state) => {
+  return () => {
+    return state;
+  };
+};
 
 describe('Actions', () => {
 
@@ -93,10 +97,168 @@ describe('Actions', () => {
     expect(res).toEqual(expectedAction);
   });
 
-  it('should create new todo an dispatch action when complete', () => {
-    var store = configure();
-    var thunk = actions.createTodo('My todo text');
+  describe('Logged in tests', () => {
+    var uid;
+    var todoId;
 
+    beforeEach((done) => {
+      login().then((res) => {
+        uid = res.uid;
+        todoId = res.todoId;
+        done()
+      }).catch((e) => console.log('** e', e, e.stack));
+    });
+
+    afterEach((done) => {
+      reset().then(() => {
+        uid = undefined;
+        done();
+      });
+    });
+
+    it('should dispatch logout', (done) => {
+      var spy = expect.createSpy()
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.startLogout();
+
+      res(spy, createGetState({})).then(() => {
+        expect(spy).toHaveBeenCalledWith(actions.logout());
+        expect(window.location.hash).toMatch(/#\/login/);
+        done();
+      }, failingSpy);
+    });
+
+    it('should create new todo item', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.createTodo('Something todo');
+
+      res(spy, createGetState({user: {uid}})).then(() => {
+        expect(spy.calls.length).toBe(1);
+        done();
+      }, failingSpy);
+    });
+
+    it('should call dispatch for each todo', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.populateTodos();
+      res(spy, createGetState({user: {uid}}))
+
+      setTimeout(() => {
+        expect(spy.calls.length).toBe(1);
+        done();
+      }, 1000);
+    });
+
+    it('should call dispatch once to toggle todo', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.toggleTodo(todoId);
+      res(spy, createGetState({user: {uid}}))
+
+      setTimeout(() => {
+        expect(spy.calls.length).toBe(1);
+        done();
+      }, 1000);
+    });
   });
 
+  describe('User exists tests', () => {
+    beforeEach((done) => {
+      createUser().then(() => {
+        done()
+      });
+    });
+
+    afterEach((done) => {
+      reset().then(() => {
+        done()
+      });
+    });
+
+    it('should reset login and show error on failed login', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.startLogin(email, badPassword);
+
+      res(spy, createGetState({})).then(failingSpy, () => {
+        expect(spy.calls.length).toEqual(2)
+        done();
+      });
+    });
+
+    it('should login and redirect with valid email and password', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.startLogin(email, password);
+
+      res(spy, createGetState({})).then(() => {
+        expect(spy.calls.length).toEqual(2);
+        expect(window.location.hash).toMatch(/#\/todos/);
+        done();
+      }, failingSpy);
+    });
+
+    it('should request reset and redirect to login', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.requestReset(email);
+
+      res(spy, createGetState({})).then(() => {
+        expect(spy.calls.length).toEqual(1);
+        expect(window.location.hash).toMatch(/#\/login/);
+        done();
+      }, failingSpy);
+    });
+
+    it ('should show message and redirect on password set', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.changePassword({
+        email,
+        oldPassword: password,
+        newPassword: password
+      });
+
+      res(spy, createGetState({})).then(() => {
+        expect(spy.calls.length).toEqual(1);
+        expect(window.location.hash).toMatch(/#\/todos/);
+        done();
+      }, failingSpy);
+    });
+  });
+
+  describe('Pure firebase tests', () => {
+    afterEach((done) => {
+      reset(done).then(() => {
+        done()
+      }, () => {
+        done();
+      });
+    });
+
+    it('should create user and redirect', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.createUser(email, password);
+
+      res(spy, createGetState({})).then(() => {
+        expect(spy.calls.length).toEqual(2);
+        expect(window.location.hash).toMatch(/#\/login/);
+        done();
+      }, failingSpy);
+    });
+
+    it('should not create user and throw error', (done) => {
+      var spy = expect.createSpy();
+      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
+      var res = actions.createUser();
+
+      res(spy, createGetState({})).then(failingSpy, () => {
+        expect(spy.calls.length).toEqual(1);
+        done();
+      });
+    });
+  });
 });

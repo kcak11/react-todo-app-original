@@ -60,7 +60,74 @@ export var clearFlashMessage = () => {
   }
 };
 
-// TODO - How can I test that the proper action gets dispatched?
+// Async action to create users
+export var createUser = (email = '', password = '') => {
+  return (dispatch, getState) => {
+    return firebaseRef.createUser({
+      email,
+      password
+    }).then(() => {
+      dispatch(showFlashMessage('Account created!', 'success'));
+      dispatch(reset('signup'));
+      hashHistory.push('/login');
+      return Promise.resolve();
+    }, (e) => {
+      dispatch(showFlashMessage(e.message, 'error'));
+      return Promise.reject();
+    });
+  };
+};
+
+// Async action to start the login process
+export var startLogin = (email = '', password = '') => {
+  return (dispatch, getState) => {
+    return firebaseRef.authWithPassword({
+      email,
+      password
+    }).then((authData) => {
+      dispatch(login(authData.token, authData.uid));
+      dispatch(populateTodos());
+      hashHistory.push('/todos');
+
+      if (authData.password.isTemporaryPassword) {
+        dispatch(showFlashMessage('Please set a new password in account settings.', 'success'));
+      }
+
+      return Promise.resolve();
+    }, (e) => {
+      dispatch(reset('login'));
+      dispatch(showFlashMessage(e.message, 'error'));
+      return Promise.reject();
+    });
+  }
+};
+
+// Async action for kicking off logout process
+export var startLogout = () => {
+  return (dispatch, getState) => {
+    return firebaseRef.unauth().then(function () {
+      dispatch(logout());
+      hashHistory.push('/login');
+      return Promise.resolve();
+    }, (error) => {
+      return Promise.reject();
+    });
+  }
+};
+
+// Async action for requesting a reset
+export var requestReset = (email = '') => {
+  return (dispatch, getState) => {
+    return firebaseRef.resetPassword({email}).then(() => {
+      dispatch(showFlashMessage('We sent an email with reset instructions.', 'success'));
+      hashHistory.push('/login');
+    }, (e) => {
+      dispatch(showFlashMessage(e.message, 'error'));
+    });
+  };
+};
+
+// Async action for creating a new todo item
 export var createTodo = (text) => {
   return (dispatch, getState) => {
     var uid = getState().user.uid;
@@ -71,17 +138,32 @@ export var createTodo = (text) => {
       createdAt: moment().unix(),
       completedAt: null
     };
-
-    var todoRef = todosRef.push(todo, (err) => {
+    var todoRef =  todosRef.push(todo, function (err) {
       dispatch(addTodo({
         ...todo,
         id: todoRef.key()
       }));
     });
+
+    return todoRef;
   }
 };
 
-export var populateTodos = (todos) => {
+// Async action for setting new password
+export var changePassword = (opts = {}) => {
+  return (dispatch, getState) => {
+    return firebaseRef.changePassword(opts).then(() => {
+      dispatch(showFlashMessage('Password reset!', 'success'));
+      hashHistory.push('/todos');
+      return Promise.resolve();
+    }, (error) => {
+      dispatch(showFlashMessage(error.message, 'error'));
+      return Promise.reject();
+    })
+  }
+};
+
+export var populateTodos = () => {
   return (dispatch, getState) => {
     var uid = getState().user.uid;
     var todosRef = getUserRef(uid).child('todos');
@@ -121,79 +203,4 @@ export var toggleTodo = (id) => {
       dispatch(updateTodo(id, updates));
     });
   };
-};
-
-export var createUser = (email = '', password = '') => {
-  return (dispatch, getState) => {
-    return firebaseRef.createUser({
-      email,
-      password
-    }).then(() => {
-      dispatch(showFlashMessage('Account created!', 'success'));
-      dispatch(reset('signup'));
-      hashHistory.push('/login');
-    }, (e) => {
-      dispatch(showFlashMessage(e.message, 'error'));
-      throw new Error(e.message);
-    });
-  };
-};
-
-
-export var startLogin = (email = '', password = '') => {
-  return (dispatch, getState) => {
-    return firebaseRef.authWithPassword({
-      email,
-      password
-    }).then((authData) => {
-      dispatch(login(authData.token, authData.uid));
-      dispatch(populateTodos());
-
-      if (authData.password.isTemporaryPassword) {
-        hashHistory.push('/set-password');
-        dispatch(showFlashMessage('Please set a new password', 'success'));
-      } else {
-        hashHistory.push('/todos');
-      }
-    }, (e) => {
-      dispatch(reset('login'));
-      dispatch(showFlashMessage(e.message, 'error'));
-      throw new Error(e.message);
-    });
-  }
-};
-
-export var startLogout = () => {
-  return (dispatch, getState) => {
-    return firebaseRef.unauth().then(function () {
-      dispatch(logout());
-      hashHistory.push('/login');
-      return;
-    }, (error) => {
-      throw new Error(error.message);
-    });
-  }
-};
-
-export var requestReset = (email = '') => {
-  return (dispatch, getState) => {
-    return firebaseRef.resetPassword({email}).then(() => {
-      dispatch(showFlashMessage('We sent an email with reset instructions.', 'success'));
-      hashHistory.push('/login');
-    }, (e) => {
-      dispatch(showFlashMessage(e.message, 'error'));
-    });
-  };
-};
-
-export var changePassword = (opts = {}) => {
-  return (dispatch, getState) => {
-    return firebaseRef.changePassword(opts).then(() => {
-      dispatch(showFlashMessage('Password reset!', 'success'));
-      hashHistory.push('/todos');
-    }, (error) => {
-      dispatch(showFlashMessage(error.message, 'error'));
-      throw new Error(error.message);
-    })
-  }
 };

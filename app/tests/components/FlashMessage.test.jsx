@@ -5,7 +5,7 @@ import expect from 'expect';
 import $ from 'jquery'
 
 import * as actions from 'actions';
-import {FlashMessage} from 'app/components/flashMessage';
+import {FlashMessage} from 'FlashMessage';
 
 describe('FlashMessage', () => {
   it('should exist', () => {

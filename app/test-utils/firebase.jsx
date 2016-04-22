@@ -9,6 +9,7 @@ var todo = {
 };
 
 export const email = 'test@example.com';
+export const unusedEmail = 'test2@example.com';
 export const password = 'password123!';
 export const badPassword = 'password123@';
 
@@ -27,11 +28,26 @@ export var login = () => {
 };
 
 export var createUser = () => {
-  return firebaseRef.createUser({email, password});
+  return firebaseRef.createUser({email, password}).catch((e) => {});
 };
 
-export var reset = (done) => {
-  return firebaseRef.removeUser({email, password}).then(() => {
+export var wipeUser = () => {
+  var authData = firebaseRef.getAuth();
+
+  if (authData) {
+    return getUserRef(authData.uid).remove();
+  } else {
+    return Promise.resolve();
+  }
+}
+
+export var reset = () => {
+  var authData = firebaseRef.getAuth();
+
+  return wipeUser().then(() => {
+    return firebaseRef.removeUser({email, password})
+  }) .then(() => {
     return firebaseRef.unauth();
-  });
+  })
+  .catch((e) => {});
 };

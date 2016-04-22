@@ -1,5 +1,5 @@
 import firebaseRef, {getUserRef} from 'firebaseRef';
-import {hashHistory} from 'react-router'
+import {hashHistory, history} from 'react-router'
 import moment from 'moment';
 import _ from 'lodash';
 import {reset} from 'redux-form';
@@ -68,12 +68,10 @@ export var createUser = (email = '', password = '') => {
       password
     }).then(() => {
       dispatch(showFlashMessage('Account created!', 'success'));
-      dispatch(reset('signup'));
       hashHistory.push('/login');
-      return Promise.resolve();
     }, (e) => {
       dispatch(showFlashMessage(e.message, 'error'));
-      return Promise.reject();
+      throw e;
     });
   };
 };
@@ -86,18 +84,15 @@ export var startLogin = (email = '', password = '') => {
       password
     }).then((authData) => {
       dispatch(login(authData.token, authData.uid));
-      dispatch(populateTodos());
       hashHistory.push('/todos');
 
       if (authData.password.isTemporaryPassword) {
         dispatch(showFlashMessage('Please set a new password in account settings.', 'success'));
       }
-
-      return Promise.resolve();
     }, (e) => {
       dispatch(reset('login'));
       dispatch(showFlashMessage(e.message, 'error'));
-      return Promise.reject();
+      throw e;
     });
   }
 };
@@ -108,9 +103,6 @@ export var startLogout = () => {
     return firebaseRef.unauth().then(function () {
       dispatch(logout());
       hashHistory.push('/login');
-      return Promise.resolve();
-    }, (error) => {
-      return Promise.reject();
     });
   }
 };
@@ -123,6 +115,7 @@ export var requestReset = (email = '') => {
       hashHistory.push('/login');
     }, (e) => {
       dispatch(showFlashMessage(e.message, 'error'));
+      throw e;
     });
   };
 };
@@ -138,14 +131,14 @@ export var createTodo = (text) => {
       createdAt: moment().unix(),
       completedAt: null
     };
-    var todoRef =  todosRef.push(todo, function (err) {
+    var todoRef =  todosRef.push(todo)
+
+    return todoRef.then(() => {
       dispatch(addTodo({
         ...todo,
         id: todoRef.key()
       }));
     });
-
-    return todoRef;
   }
 };
 
@@ -155,10 +148,9 @@ export var changePassword = (opts = {}) => {
     return firebaseRef.changePassword(opts).then(() => {
       dispatch(showFlashMessage('Password reset!', 'success'));
       hashHistory.push('/todos');
-      return Promise.resolve();
     }, (error) => {
       dispatch(showFlashMessage(error.message, 'error'));
-      return Promise.reject();
+      throw e;
     })
   }
 };
@@ -166,18 +158,15 @@ export var changePassword = (opts = {}) => {
 export var populateTodos = () => {
   return (dispatch, getState) => {
     var uid = getState().user.uid;
-    var todosRef = getUserRef(uid).child('todos');
+    var todosRef = getUserRef(uid);
 
-    todosRef.once('value', (snapshot) => {
+    return todosRef.once('value', (snapshot) => {
       var val = snapshot.val();
+      var todos = val.todos || [];
 
-      if (!val) {
-        return;
-      }
-
-      var todos = Object.keys(val).map((key) => {
+      Object.keys(todos).map((key) => {
         dispatch(addTodo({
-          ...val[key],
+          ...todos[key],
           id: key
         }));
       });
@@ -191,7 +180,7 @@ export var toggleTodo = (id) => {
     var todoRef = getUserRef(uid).child(`todos/${id}`);
     var updates;
 
-    todoRef.once('value').then((snapshot) => {
+    return todoRef.once('value').then((snapshot) => {
       var newCompleted = !snapshot.val().completed;
       updates = {
         completed: newCompleted,

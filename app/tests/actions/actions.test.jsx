@@ -1,15 +1,18 @@
 import expect from 'expect';
 import * as actions from 'actions';
 import {configure} from 'configureStore';
-import {email, password, badPassword, reset, login, createUser, createSampleTodo} from 'app/test-utils/firebase';
+import {email, unusedEmail, password, badPassword, reset, login, createUser, createSampleTodo} from 'app/test-utils/firebase';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-var createGetState = (state) => {
-  return () => {
-    return state;
-  };
-};
+const mockStore = configureStore([thunk]);
 
 describe('Actions', () => {
+  var triggerError;
+
+  beforeEach(() => {
+    triggerError = expect.createSpy().andThrow(new Error('Should not have been called'));
+  });
 
   it('should generate search text action', () => {
     var action = {
@@ -98,69 +101,84 @@ describe('Actions', () => {
   });
 
   describe('Logged in tests', () => {
-    var uid;
-    var todoId;
+    var authData = {};
 
     beforeEach((done) => {
-      login().then((res) => {
-        uid = res.uid;
-        todoId = res.todoId;
+      login().then(({uid, todoId}) => {
+        authData = {
+          uid,
+          todoId
+        };
         done()
-      }).catch((e) => console.log('** e', e, e.stack));
+      })
     });
 
     afterEach((done) => {
       reset().then(() => {
-        uid = undefined;
+        authData = {};
         done();
       });
     });
 
-    it('should dispatch logout', (done) => {
-      var spy = expect.createSpy()
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.startLogout();
-
-      res(spy, createGetState({})).then(() => {
-        expect(spy).toHaveBeenCalledWith(actions.logout());
+    it('should dispatch logout and redirect to login', (done) => {
+      const store = mockStore({});
+      store.dispatch(actions.startLogout(email, password)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({type: 'LOGOUT'});
         expect(window.location.hash).toMatch(/#\/login/);
         done();
-      }, failingSpy);
+      }).catch(done);
     });
 
     it('should create new todo item', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.createTodo('Something todo');
-
-      res(spy, createGetState({user: {uid}})).then(() => {
-        expect(spy.calls.length).toBe(1);
+      const store = mockStore({
+        user: {
+          uid: authData.uid
+        }
+      });
+      const todoText = 'My todo item';
+      store.dispatch(actions.createTodo(todoText)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({type: 'ADD_TODO'});
+        expect(actions[0].todo).toInclude({
+          text: todoText
+        });
         done();
-      }, failingSpy);
+      }).catch(done);
     });
 
     it('should call dispatch for each todo', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.populateTodos();
-      res(spy, createGetState({user: {uid}}))
-
-      setTimeout(() => {
-        expect(spy.calls.length).toBe(1);
+      const store = mockStore({
+        user: {
+          uid: authData.uid
+        }
+      });
+      store.dispatch(actions.populateTodos()).then(() => {
+        const actions = store.getActions();
+        expect(actions[0].todo).toInclude({
+          id: authData.todoId
+        });
         done();
-      }, 1000);
+      }).catch(done);
     });
 
     it('should call dispatch once to toggle todo', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.toggleTodo(todoId);
-      res(spy, createGetState({user: {uid}}))
-
-      setTimeout(() => {
-        expect(spy.calls.length).toBe(1);
+      const store = mockStore({
+        user: {
+          uid: authData.uid
+        }
+      });
+      store.dispatch(actions.toggleTodo(authData.todoId)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({
+          type: 'UPDATE_TODO',
+          id: authData.todoId
+        });
+        expect(actions[0].updates).toInclude({
+          completed: true
+        });
         done();
-      }, 1000);
+      }).catch(done);
     });
   });
 
@@ -177,86 +195,119 @@ describe('Actions', () => {
       });
     });
 
-    it('should reset login and show error on failed login', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.startLogin(email, badPassword);
-
-      res(spy, createGetState({})).then(failingSpy, () => {
-        expect(spy.calls.length).toEqual(2)
+    it('should reset login form and show error on failed login', (done) => {
+      const store = mockStore({});
+      store.dispatch(actions.startLogin(email, badPassword)).then(triggerError, () => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({
+          type: 'redux-form/RESET',
+          form: 'login'
+        });
+        expect(actions[1]).toInclude({
+          type: 'SHOW_FLASH_MESSAGE',
+          messageType: 'error'
+        });
         done();
       });
     });
 
     it('should login and redirect with valid email and password', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.startLogin(email, password);
-
-      res(spy, createGetState({})).then(() => {
-        expect(spy.calls.length).toEqual(2);
+      const store = mockStore({});
+      store.dispatch(actions.startLogin(email, password)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({type: 'LOGIN'});
         expect(window.location.hash).toMatch(/#\/todos/);
         done();
-      }, failingSpy);
+      }).catch(done);
     });
 
     it('should request reset and redirect to login', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.requestReset(email);
-
-      res(spy, createGetState({})).then(() => {
-        expect(spy.calls.length).toEqual(1);
+      const store = mockStore({});
+      store.dispatch(actions.requestReset(email)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({
+          type: 'SHOW_FLASH_MESSAGE',
+          messageType: 'success'
+        });
         expect(window.location.hash).toMatch(/#\/login/);
         done();
-      }, failingSpy);
+      }).catch(done);
+    });
+
+    it('should render email not found message', (done) => {
+      const store = mockStore({});
+      store.dispatch(actions.requestReset(unusedEmail)).then(triggerError, () => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({
+          type: 'SHOW_FLASH_MESSAGE',
+          messageType: 'error'
+        });
+        done();
+      });
     });
 
     it ('should show message and redirect on password set', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.changePassword({
+      const store = mockStore({});
+      store.dispatch(actions.changePassword({
         email,
         oldPassword: password,
         newPassword: password
-      });
-
-      res(spy, createGetState({})).then(() => {
-        expect(spy.calls.length).toEqual(1);
+      })).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({
+          type: 'SHOW_FLASH_MESSAGE',
+          messageType: 'success'
+        });
         expect(window.location.hash).toMatch(/#\/todos/);
         done();
-      }, failingSpy);
+      }).catch(done);
+    });
+
+    it ('should show error message', (done) => {
+      const store = mockStore({});
+      store.dispatch(actions.changePassword({
+        email,
+        oldPassword: badPassword,
+        newPassword: password
+      })).then(triggerError, () => {
+        const actions = store.getActions();
+        expect(actions[0]).toInclude({
+          type: 'SHOW_FLASH_MESSAGE',
+          messageType: 'error'
+        });
+        done();
+      });
     });
   });
 
-  describe('Pure firebase tests', () => {
-    afterEach((done) => {
-      reset(done).then(() => {
+  describe('Firebase without user', () => {
+    beforeEach((done) => {
+      reset().then(() => {
         done()
-      }, () => {
-        done();
       });
     });
 
-    it('should create user and redirect', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.createUser(email, password);
+    it('should create user', (done) => {
+      const store = mockStore({});
+      const expectedActions = [
+        actions.showFlashMessage('Account created!', 'success')
+      ];
 
-      res(spy, createGetState({})).then(() => {
-        expect(spy.calls.length).toEqual(2);
+      store.dispatch(actions.createUser(email, password)).then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual(expectedActions);
         expect(window.location.hash).toMatch(/#\/login/);
         done();
-      }, failingSpy);
+      }).catch(done);
     });
 
-    it('should not create user and throw error', (done) => {
-      var spy = expect.createSpy();
-      var failingSpy = expect.createSpy().andThrow(new Error('Should not have been called'))
-      var res = actions.createUser();
+    it('should not create user', (done) => {
+      const store = mockStore({});
 
-      res(spy, createGetState({})).then(failingSpy, () => {
-        expect(spy.calls.length).toEqual(1);
+      store.dispatch(actions.createUser()).then(triggerError, () => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual('SHOW_FLASH_MESSAGE');
+        expect(actions[0].messageType).toEqual('error');
         done();
       });
     });

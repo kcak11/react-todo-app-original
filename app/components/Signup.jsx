@@ -1,7 +1,7 @@
 import React from 'react';
 import {reduxForm} from 'redux-form';
 import {hashHistory} from 'react-router';
-import * as actions from 'app/actions/index'
+import * as actions from 'actions/index'
 
 export var Signup = React.createClass({
   getInitialState: function () {

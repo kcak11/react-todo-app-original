@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import * as actions from 'app/actions/index';
+import * as actions from 'actions/index';
 
 export var AddTodo = React.createClass({
   handleSubmit: function (e) {

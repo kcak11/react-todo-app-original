@@ -4,6 +4,7 @@ import reducer from 'reducers/index';
 
 export var configure = (initialState = {}) => {
 
+  // TOOD - CREATE A MIDDLEWARE File
   const logger = store => next => action => {
     var result;
 

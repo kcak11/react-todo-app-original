@@ -5,9 +5,9 @@ import TestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import $ from 'jquery';
 
-import {configure} from 'configureStore';
-import ConnectedTodoList, {TodoList} from 'TodoList';
-import ConnectedTodo, {Todo} from 'Todo'
+import {configure} from 'store/configureStore';
+import ConnectedTodoList, {TodoList} from 'components/TodoList';
+import ConnectedTodo, {Todo} from 'components/Todo'
 
 describe('TodoList', () => {
   it('should exist', () => {

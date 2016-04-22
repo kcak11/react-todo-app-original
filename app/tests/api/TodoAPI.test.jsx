@@ -1,6 +1,6 @@
 import expect from 'expect';
 
-import TodoAPI from 'app/api/TodoAPI';
+import TodoAPI from 'api/TodoAPI';
 
 describe('TodoAPI', () => {
   beforeEach(() => {

@@ -2,8 +2,8 @@ import expect from 'expect';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import {email, unusedEmail, password, badPassword, reset, login, createUser, createSampleTodo} from 'app/test-utils/firebase';
-import * as actions from 'app/actions/index';
+import {email, unusedEmail, password, badPassword, reset, login, createUser, createSampleTodo} from 'test-utils/firebase';
+import * as actions from 'actions/index';
 
 const mockStore = configureStore([thunk]);
 

@@ -5,9 +5,9 @@ import TestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import $ from 'jquery';
 
-import {configure} from 'app/store/configureStore';
-import TodoApp from 'app/components/TodoApp';
-import TodoList from 'TodoList';
+import {configure} from 'store/configureStore';
+import TodoApp from 'components/TodoApp';
+import TodoList from 'components/TodoList';
 
 describe('TodoApp', () => {
   it('should exist', () => {

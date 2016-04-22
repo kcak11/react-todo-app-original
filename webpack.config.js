@@ -24,16 +24,10 @@ module.exports = {
     root: __dirname,
     modulesDirectories: [
       'node_modules',
-      './app/components',
-      './app/api'
+      './app'
     ],
     alias: {
-      applicationStyles: 'app/styles/app.scss',
-      actions: 'app/actions/actions.jsx',
-      reducers: 'app/reducers',
-      app: 'app',
-      configureStore: 'app/store/configureStore.jsx',
-      firebaseRef: 'app/firebase/firebase.jsx'
+      applicationStyles: 'app/styles/app.scss'
     },
     extensions: ['', '.js', '.jsx']
   },

@@ -1,6 +1,6 @@
 import expect from 'expect';
 
-import * as actions from 'app/actions/index';
+import * as actions from 'actions/index';
 
 describe('Actions Generators', () => {
   it('should generate search text action', () => {

@@ -2,10 +2,10 @@ import React from 'react';
 import uuid from 'node-uuid';
 import moment from 'moment';
 
-import TodoList from 'TodoList'
-import AddTodo from 'AddTodo';
-import TodoSearch from 'TodoSearch';
-import Profile from 'Profile';
+import TodoList from 'components/TodoList'
+import AddTodo from 'components/AddTodo';
+import TodoSearch from 'components/TodoSearch';
+import Profile from 'components/Profile';
 
 var TodoApp = React.createClass({
   render: function () {

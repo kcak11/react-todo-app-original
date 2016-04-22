@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux'
 import {hashHistory} from 'react-router';
 
-import * as actions from 'app/actions/index';
+import * as actions from 'actions/index';
 
 export var Profile = React.createClass({
   componentDidMount: function () {

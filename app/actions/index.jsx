@@ -1,5 +1,5 @@
-import * as actionGenerators from 'app/actions/action-generators';
-import * as asyncActions from 'app/actions/async-actions';
+import * as actionGenerators from 'actions/action-generators';
+import * as asyncActions from 'actions/async-actions';
 
 module.exports = {
     ...actionGenerators,

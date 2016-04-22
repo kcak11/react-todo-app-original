@@ -4,8 +4,8 @@ import TestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import $ from 'jquery'
 
-import * as actions from 'app/actions/index';
-import {AddTodo} from 'AddTodo';
+import * as actions from 'actions/index';
+import {AddTodo} from 'components/AddTodo';
 
 describe('AddTodo', () => {
   it('should exist', () => {

@@ -1,9 +1,9 @@
-import firebaseRef, {getUserRef} from 'firebaseRef';
+import firebaseRef, {getUserRef} from 'database/firebase';
 import {hashHistory} from 'react-router'
 import moment from 'moment';
 import {reset} from 'redux-form';
 
-import * as actions from 'app/actions/action-generators';
+import * as actions from 'actions/action-generators';
 
 // Async action to create users
 export var createUser = (email = '', password = '') => {

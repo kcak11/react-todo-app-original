@@ -4,9 +4,9 @@ import TestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import $ from 'jquery'
 
-import createPromiseSpy from 'app/test-utils/promise-spy';
-import * as actions from 'app/actions/index';
-import {Signup} from 'Signup';
+import createPromiseSpy from 'test-utils/promise-spy';
+import * as actions from 'actions/index';
+import {Signup} from 'components/Signup';
 
 describe('Signup', () => {
   const exampleEmail = 'test@example.com';

@@ -4,8 +4,8 @@ import TestUtils from 'react-addons-test-utils';
 import expect from 'expect';
 import $ from 'jquery'
 
-import * as actions from 'app/actions/index';
-import {FlashMessage} from 'FlashMessage';
+import * as actions from 'actions/index';
+import {FlashMessage} from 'components/FlashMessage';
 
 describe('FlashMessage', () => {
   it('should exist', () => {

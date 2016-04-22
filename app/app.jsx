@@ -4,16 +4,16 @@ import {Provider} from 'react-redux';
 import {Route, Router, IndexRoute, hashHistory} from 'react-router';
 
 // My modules
-import firebaseRef, {getUserRef} from 'firebaseRef';
-import TodoApp from 'app/components/TodoApp';
-import actions from 'app/actions/index'
-import {configure} from 'app/store/configureStore';
-import TodoAPI from 'app/api/TodoAPI';
-import Signup from 'app/components/Signup';
-import Login from 'app/components/Login';
-import RequestReset from 'app/components/RequestReset';
-import SetPassword from 'app/components/SetPassword';
-import App from 'app/components/App';
+import firebaseRef, {getUserRef} from 'database/firebase';
+import TodoApp from 'components/TodoApp';
+import actions from 'actions/index'
+import {configure} from 'store/configureStore';
+import TodoAPI from 'api/TodoAPI';
+import Signup from 'components/Signup';
+import Login from 'components/Login';
+import RequestReset from 'components/RequestReset';
+import SetPassword from 'components/SetPassword';
+import App from 'components/App';
 
 var store = configure();
 

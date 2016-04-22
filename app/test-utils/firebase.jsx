@@ -1,4 +1,4 @@
-import firebaseRef, {getUserRef} from 'firebaseRef';
+import firebaseRef, {getUserRef} from 'database/firebase';
 import moment from 'moment';
 
 var todo = {

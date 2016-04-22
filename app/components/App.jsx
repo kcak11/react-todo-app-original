@@ -1,5 +1,5 @@
 import React from 'react';
-import FlashMessage from 'FlashMessage';
+import FlashMessage from 'components/FlashMessage';
 
 export default (props) => {
   return (

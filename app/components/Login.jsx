@@ -1,7 +1,8 @@
-var React = require('react');
+import React from 'react';
 import {reduxForm} from 'redux-form';
-var {hashHistory} = require('react-router');
-import * as actions from 'actions';
+import {hashHistory} from 'react-router';
+
+import * as actions from 'app/actions/index';
 
 export var Login = React.createClass({
   getInitialState: function () {

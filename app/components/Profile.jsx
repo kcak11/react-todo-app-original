@@ -1,7 +1,8 @@
-var React = require('react');
-var {connect} = require('react-redux');
-var {hashHistory} = require('react-router');
-import * as actions from 'actions';
+import React from 'react';
+import {connect} from 'react-redux'
+import {hashHistory} from 'react-router';
+
+import * as actions from 'app/actions/index';
 
 export var Profile = React.createClass({
   componentDidMount: function () {

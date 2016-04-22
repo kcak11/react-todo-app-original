@@ -1,6 +1,6 @@
-var redux = require('redux');
-import reducer from 'reducers/index';
+import * as redux from 'redux'
 import thunk from 'redux-thunk';
+import reducer from 'reducers/index';
 
 export var configure = (initialState = {}) => {
 

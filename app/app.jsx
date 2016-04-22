@@ -1,18 +1,21 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var {Provider} = require('react-redux');
-var {Route, Router, IndexRoute, hashHistory} = require('react-router');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import {Route, Router, IndexRoute, hashHistory} from 'react-router';
 
+// My modules
 import firebaseRef, {getUserRef} from 'firebaseRef';
-var TodoApp = require('TodoApp');
-var actions = require('actions');
-var store = require('configureStore').configure();
-var TodoAPI = require('TodoAPI');
-import Signup from 'Signup';
-import Login from 'Login';
-import RequestReset from 'RequestReset';
-import SetPassword from 'SetPassword';
-import App from 'App';
+import TodoApp from 'app/components/TodoApp';
+import actions from 'app/actions/index'
+import {configure} from 'app/store/configureStore';
+import TodoAPI from 'app/api/TodoAPI';
+import Signup from 'app/components/Signup';
+import Login from 'app/components/Login';
+import RequestReset from 'app/components/RequestReset';
+import SetPassword from 'app/components/SetPassword';
+import App from 'app/components/App';
+
+var store = configure();
 
 // Check if there is already an id ready to go
 if (store.getState().user.uid) {
@@ -23,6 +26,7 @@ if (store.getState().user.uid) {
 $(document).foundation();
 
 // App css
+// TODO - conver this to a separate css file
 require('style!css!sass!applicationStyles');
 require('style!css!sass!animate.css');
 

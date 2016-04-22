@@ -5,7 +5,7 @@ import expect from 'expect';
 import $ from 'jquery'
 
 import createPromiseSpy from 'app/test-utils/promise-spy';
-import * as actions from 'actions';
+import * as actions from 'app/actions/index';
 import {Login} from 'Login';
 
 describe('Login', () => {

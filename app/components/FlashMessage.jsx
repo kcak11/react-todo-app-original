@@ -1,7 +1,8 @@
-var React = require('react');
-var {connect} = require('react-redux');
-import * as actions from 'actions'
+import React from 'react';
+import {connect} from 'react-redux';
 import noty from 'noty';
+
+import * as actions from 'app/actions/index'
 
 var notyDefaults = {
   dismissQueue: false,

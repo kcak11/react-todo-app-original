@@ -29,7 +29,7 @@ export var authMiddleware = store => next => action => {
   var result;
 
   if (typeof action === 'function') {
-    result = action(store.dispatch, store.getState)
+    result = action(store.dispatch, store.getState);
   } else {
     result = next(action)
   }

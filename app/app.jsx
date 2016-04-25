@@ -10,12 +10,6 @@ import routes from 'routes/index'
 
 var store = configure();
 
-firebaseRef.onAuth((authData) => {
-  if (authData) {
-    store.dispatch(actions.populateTodos());
-  }
-})
-
 // Load foundation
 $(document).foundation();
 

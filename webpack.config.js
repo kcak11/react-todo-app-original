@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
-var isProduction = process.env.NODE_ENV === 'production';
+var env = process.env.NODE_ENV || 'development';
 
 module.exports = {
   entry: [
@@ -20,7 +20,10 @@ module.exports = {
       compressor: {
         warnings: false
       }
-    })
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"' + env + '"'
+    }),
   ],
   output: {
     path: __dirname,
@@ -54,5 +57,5 @@ module.exports = {
       path.resolve(__dirname, './node_modules/foundation-sites/scss')
     ]
   },
-  devtool: isProduction ? undefined : 'cheap-module-eval-source-map'
+  devtool: env === 'production' ? undefined : 'cheap-module-eval-source-map'
 };

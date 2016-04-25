@@ -3,16 +3,18 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {Router, hashHistory} from 'react-router';
 
+import firebaseRef from 'database/firebase';
 import actions from 'actions/index'
 import {configure} from 'store/configureStore';
 import routes from 'routes/index'
 
 var store = configure();
 
-// Check if there is already an id ready to go
-if (store.getState().user.uid) {
-  store.dispatch(actions.populateTodos());
-}
+firebaseRef.onAuth((authData) => {
+  if (authData) {
+    store.dispatch(actions.populateTodos());
+  }
+})
 
 // Load foundation
 $(document).foundation();
